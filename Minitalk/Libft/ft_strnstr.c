@@ -1,32 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.c                                           :+:      :+:    :+:   */
+/*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/22 14:21:48 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/03/22 15:13:52 by bpleutin         ###   ########.fr       */
+/*   Created: 2023/02/03 15:37:13 by bpleutin          #+#    #+#             */
+/*   Updated: 2023/02/06 17:57:42 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk.h"
+#include "libft.h"
 
-int	ft_recv_msg(void)
+char	*ft_strnstr(const char *big, const char *little, size_t len)
 {
-	// lol
-}
+	size_t	i;
+	size_t	j;
 
-int	main(void)
-{
-	char	*pid;
-
-	pid = ft_strdup(ft_itoa(getpid()));
-	write(1, "PID: ", 5);
-	write(1, pid, ft_strlen(pid));
-	write(1, "\n", 1);
-	pause();
-	while (ft_recv_msg())
-		pause();
-	return (0);
+	if (!big && len == 0)
+		return (0);
+	if (little[0] == '\0')
+		return ((char *)big);
+	i = 0;
+	j = 0;
+	while (big[i] && i < len)
+	{	
+		if (big[i] == little[j])
+		{
+			if (!little[j + 1])
+				return ((char *)&big[i - j]);
+			j++;
+		}
+		else
+		{
+			i = i - j;
+			j = 0;
+		}
+		i++;
+	}
+	return (NULL);
 }

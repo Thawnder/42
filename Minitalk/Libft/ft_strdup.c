@@ -1,32 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.c                                           :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/22 14:21:48 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/03/22 15:13:52 by bpleutin         ###   ########.fr       */
+/*   Created: 2023/02/07 10:17:31 by bpleutin          #+#    #+#             */
+/*   Updated: 2023/02/07 10:35:26 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk.h"
+#include "libft.h"
 
-int	ft_recv_msg(void)
+char	*ft_strdup(const char *s)
 {
-	// lol
-}
+	char	*str;
+	size_t	i;
+	size_t	len;
 
-int	main(void)
-{
-	char	*pid;
-
-	pid = ft_strdup(ft_itoa(getpid()));
-	write(1, "PID: ", 5);
-	write(1, pid, ft_strlen(pid));
-	write(1, "\n", 1);
-	pause();
-	while (ft_recv_msg())
-		pause();
-	return (0);
+	len = ft_strlen(s);
+	str = malloc(len * sizeof(char) + 1);
+	if (!str)
+		return (NULL);
+	i = 0;
+	while (i < len)
+	{
+		str[i] = ((char *)s)[i];
+		i++;
+	}
+	str[i] = 0;
+	return (str);
 }

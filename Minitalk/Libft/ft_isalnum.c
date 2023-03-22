@@ -1,32 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.c                                           :+:      :+:    :+:   */
+/*   ft_isalnum.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/22 14:21:48 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/03/22 15:13:52 by bpleutin         ###   ########.fr       */
+/*   Created: 2023/02/01 15:21:11 by bpleutin          #+#    #+#             */
+/*   Updated: 2023/02/06 11:11:31 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk.h"
-
-int	ft_recv_msg(void)
+int	ft_isalnum(int c)
 {
-	// lol
-}
-
-int	main(void)
-{
-	char	*pid;
-
-	pid = ft_strdup(ft_itoa(getpid()));
-	write(1, "PID: ", 5);
-	write(1, pid, ft_strlen(pid));
-	write(1, "\n", 1);
-	pause();
-	while (ft_recv_msg())
-		pause();
+	if ((c >= 48 && c <= 57) || (c >= 65 && c <= 90)
+		|| (c >= 97 && c <= 122))
+		return (1);
 	return (0);
 }

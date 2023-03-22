@@ -1,32 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.c                                           :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/22 14:21:48 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/03/22 15:13:52 by bpleutin         ###   ########.fr       */
+/*   Created: 2023/02/01 15:40:38 by bpleutin          #+#    #+#             */
+/*   Updated: 2023/02/03 16:54:08 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk.h"
+#include <string.h>
 
-int	ft_recv_msg(void)
+size_t	ft_strlen(const char *s)
 {
-	// lol
-}
+	size_t	i;
 
-int	main(void)
-{
-	char	*pid;
-
-	pid = ft_strdup(ft_itoa(getpid()));
-	write(1, "PID: ", 5);
-	write(1, pid, ft_strlen(pid));
-	write(1, "\n", 1);
-	pause();
-	while (ft_recv_msg())
-		pause();
-	return (0);
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
 }

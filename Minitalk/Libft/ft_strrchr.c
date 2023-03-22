@@ -1,32 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.c                                           :+:      :+:    :+:   */
+/*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/22 14:21:48 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/03/22 15:13:52 by bpleutin         ###   ########.fr       */
+/*   Created: 2023/02/03 11:06:42 by bpleutin          #+#    #+#             */
+/*   Updated: 2023/02/06 12:37:43 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk.h"
+#include "libft.h"
 
-int	ft_recv_msg(void)
+char	*ft_strrchr(const char *s, int c)
 {
-	// lol
-}
+	int	i;
+	int	flag;
 
-int	main(void)
-{
-	char	*pid;
-
-	pid = ft_strdup(ft_itoa(getpid()));
-	write(1, "PID: ", 5);
-	write(1, pid, ft_strlen(pid));
-	write(1, "\n", 1);
-	pause();
-	while (ft_recv_msg())
-		pause();
+	i = 0;
+	flag = 0;
+	while (s[i])
+	{
+		if ((unsigned char)s[i] == (unsigned char)c)
+			flag = 1;
+		i++;
+	}
+	if (c == 0)
+		flag = 1;
+	if (flag == 1)
+	{
+		while ((unsigned char)s[i] != (unsigned char)c)
+			i--;
+		return ((char *)&s[i]);
+	}
 	return (0);
 }

@@ -1,32 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.c                                           :+:      :+:    :+:   */
+/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/22 14:21:48 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/03/22 15:13:52 by bpleutin         ###   ########.fr       */
+/*   Created: 2023/02/09 13:17:15 by bpleutin          #+#    #+#             */
+/*   Updated: 2023/02/09 13:24:36 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk.h"
+#include "libft.h"
 
-int	ft_recv_msg(void)
+void	ft_putnbr_fd(int n, int fd)
 {
-	// lol
-}
+	unsigned int	res;
+	char			tmp;
 
-int	main(void)
-{
-	char	*pid;
-
-	pid = ft_strdup(ft_itoa(getpid()));
-	write(1, "PID: ", 5);
-	write(1, pid, ft_strlen(pid));
-	write(1, "\n", 1);
-	pause();
-	while (ft_recv_msg())
-		pause();
-	return (0);
+	if (n < 0)
+	{
+		n = -n;
+		write(fd, "-", 1);
+	}
+	res = n;
+	if (res < 10)
+	{
+		tmp = res + 48;
+		write(fd, &tmp, sizeof(char));
+	}
+	else
+	{
+		ft_putnbr_fd(res / 10, fd);
+		tmp = res % 10 + 48;
+		write(fd, &tmp, sizeof(char));
+	}
 }
