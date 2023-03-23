@@ -1,38 +1,36 @@
+NAME = libft.a
 CLIENT_NAME = client
-
 SERVER_NAME = server
 
 GCC = gcc
-
-CLIENT_SRC = client.c
-
-SERVER_SRC = server.c
-
 FLAGS = -Wall -Wextra -Werror -g
 
-OBJ_CLIENT = ${CLIENT_SRC:.c=.o}
+CLIENT_SRC = client.c
+SERVER_SRC = server.c
 
-OBJ_SERVER = ${SERVER_SRC:.c=.o}
-
-all: ${CLIENT_NAME} ${SERVER_NAME}
+all: ${NAME} ${CLIENT_NAME} ${SERVER_NAME}
 
 .c.o:
 	${GCC} ${FLAGS} -c $< -o ${<:.c=.o}
 
-${CLIENT_NAME}: ${OBJ_CLIENT}
-	${GCC} ${FLAGS} -o ${CLIENT_NAME} $^
+${NAME}:
+	make -C Libft/
+	cp Libft/libft.a .
+	ar rc ${NAME}
 
-${SERVER_NAME}: ${OBJ_SERVER}
-	${GCC} ${FLAGS} -o ${SERVER_NAME} $^
+${CLIENT_NAME}: ${NAME}
+	${GCC} ${FLAGS} -o ${CLIENT_NAME} ${CLIENT_SRC} ${NAME}
+
+${SERVER_NAME}: ${NAME}
+	${GCC} ${FLAGS} -o ${SERVER_NAME} ${SERVER_SRC} ${NAME}
 
 bonus: all
 
 clean:
-	rm -f ${OBJ_SERVER}
-	rm -f ${OBJ_CLIENT}
+	make clean -C Libft/
 
 fclean: clean
-	rm -f ${CLIENT_NAME}
-	rm -f ${SERVER_NAME}
+	make fclean -C Libft/
+	rm -f ${CLIENT_NAME} ${SERVER_NAME} ${NAME}
 
 re: fclean all

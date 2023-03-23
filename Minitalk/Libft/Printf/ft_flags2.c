@@ -6,13 +6,13 @@
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 10:37:34 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/03/03 17:18:48 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/03/23 12:18:32 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	ft_strlen(char *str)
+size_t	ft_strlen(const char *str)
 {
 	int	i;
 

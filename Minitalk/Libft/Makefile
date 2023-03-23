@@ -35,40 +35,42 @@ SRC = ft_isalpha.c \
       ft_putchar_fd.c \
       ft_putstr_fd.c \
       ft_putendl_fd.c \
-      ft_putnbr_fd.c
-
-SRC_BONUS = ft_lstnew.c \
-	    ft_lstadd_front.c \
-	    ft_lstsize.c \
-	    ft_lstlast.c \
-	    ft_lstadd_back.c \
-	    ft_lstdelone.c \
-	    ft_lstclear.c \
-	    ft_lstiter.c \
-	    ft_lstmap.c
+      ft_putnbr_fd.c \
+      ft_lstnew.c \
+      ft_lstadd_front.c \
+      ft_lstsize.c \
+      ft_lstlast.c \
+      ft_lstadd_back.c \
+      ft_lstdelone.c \
+      ft_lstclear.c \
+      ft_lstiter.c \
+      ft_lstmap.c
 
 FLAGS = -Wall -Wextra -Werror
 
 OBJ = ${SRC:.c=.o}
 
-OBJ_BONUS = ${SRC_BONUS:.c=.o}
-
 .c.o:
 	${GCC} ${FLAGS} -c $< -o ${<:.c=.o}
 
 ${NAME}: ${OBJ}
+	make -C Printf/
+	cp Printf/libftprintf.a .
+	mv libftprintf.a ${NAME}
 	ar rc ${NAME} ${OBJ}
-
-bonus: ${OBJ_BONUS}
-	ar rc ${NAME} ${OBJ_BONUS}
 
 all: ${NAME}
 
+bonus: all
+
 clean:
+	make clean -C Printf/
 	rm -f ${OBJ}
-	rm -f ${OBJ_BONUS}
 
 fclean: clean
+	make fclean -C Printf/
 	rm -f ${NAME}
 
 re: fclean all
+
+.PHONY:	all bonus clean fclean re

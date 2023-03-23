@@ -6,27 +6,48 @@
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 14:21:48 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/03/22 15:13:52 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/03/23 16:22:34 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-int	ft_recv_msg(void)
+void	ft_recv_char(int signal, siginfo_t *s, void *osef)
 {
-	// lol
+	static int		i = 0;
+	static char		c = 0;
+
+	(void)osef;
+	if (i < 9)
+	{
+		if (signal == SIGUSR1)
+			c = c | 1 << i;
+		i++;
+		return ;
+	}
+	ft_printf("%c", c);
+	i = 0;
+	if (c == 0)
+	{
+		kill(s->si_pid, SIGUSR1);
+		ft_printf("\n");
+		return ;
+	}
+	c = 0;
 }
 
 int	main(void)
 {
-	char	*pid;
+	struct sigaction	s;
 
-	pid = ft_strdup(ft_itoa(getpid()));
-	write(1, "PID: ", 5);
-	write(1, pid, ft_strlen(pid));
-	write(1, "\n", 1);
-	pause();
-	while (ft_recv_msg())
-		pause();
+	ft_printf("PID: %d\n", getpid());
+	s.sa_sigaction = ft_recv_char;
+	s.sa_flags = SA_SIGINFO | SA_RESTART;
+	sigemptyset(&s.sa_mask);
+	while (1)
+	{
+		sigaction(SIGUSR1, &s, 0);
+		sigaction(SIGUSR2, &s, 0);
+	}
 	return (0);
 }

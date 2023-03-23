@@ -6,11 +6,11 @@
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 17:29:15 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/02/04 11:15:31 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/03/23 11:30:31 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_atoi(const char *nptr)
+int	ft_libatoi(const char *nptr)
 {
 	int				i;
 	int				sign;

@@ -6,7 +6,7 @@
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/16 10:35:16 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/03/09 10:48:49 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/03/23 12:23:16 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	ft_itoaloop(unsigned int res, int *cmp, int length);
 void	ft_spaceplus(int nb, char *format, int *cmp);
 int		ft_inttest(int nb, char *format, int *idx);
 int		ft_uinttest(unsigned int nb, char *format, int *idx);
-int		ft_strlen(char *str);
+size_t	ft_strlen(const char *str);
 int		ft_reslen(char *str, char *f);
 int		puissance(int val, int p);
 int		belongs_to(char c, char *set, int limit);

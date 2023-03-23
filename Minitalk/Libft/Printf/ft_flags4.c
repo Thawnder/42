@@ -6,7 +6,7 @@
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 13:44:09 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/03/03 11:01:59 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/03/23 12:19:22 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	ft_ressize_uint(unsigned int res, char *f, int *idx, int *size)
 			*size += ft_max(get_uint_length(res), ft_atoi(&f[z], tmp));
 		*idx = ft_atoi(&f[z], tmp) - get_uint_length(res);
 	}
-	else if (ft_nbdet(f, ft_strlen(f) < 0))
+	else if (ft_nbdet(f, ft_strlen(f)) < 0)
 	{
 		*size = get_uint_length(res);
 		*idx = ft_atoi(&f[z], tmp) - get_uint_length(res);
