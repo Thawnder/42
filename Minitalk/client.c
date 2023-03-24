@@ -6,7 +6,7 @@
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 14:21:33 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/03/23 16:22:54 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/03/24 16:58:59 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	g_re = 0;
 
 void	ft_kill(char *msg, int i, int j, int pid)
 {
-	usleep(25);
+	usleep(50);
 	if (msg[i] & (1 << j))
 		kill(pid, SIGUSR1);
 	else
@@ -34,14 +34,14 @@ void	ft_send_msg(int pid, char *msg)
 		j = 0;
 		while (j < 9)
 			ft_kill(msg, i, j++, pid);
-		usleep(5);
+		usleep(10);
 		kill(pid, SIGUSR1);
 		i++;
 	}
 	j = 0;
 	while (j < 9)
 		ft_kill(msg, i, j++, pid);
-	usleep(5);
+	usleep(10);
 	kill(pid, SIGUSR1);
 }
 

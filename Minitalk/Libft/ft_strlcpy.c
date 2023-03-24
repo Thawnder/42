@@ -6,13 +6,13 @@
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 17:42:33 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/02/04 11:18:13 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/03/24 16:20:10 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t size)
+void	ft_strlcpy(char *dst, const char *src, size_t size)
 {
 	size_t	i;
 	size_t	len;
@@ -30,5 +30,4 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 		}
 		dst[i] = 0;
 	}
-	return (len);
 }

@@ -6,18 +6,49 @@
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 14:21:48 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/03/23 16:22:34 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/03/24 16:48:27 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
+char	*ft_realloc(char *dest, int size)
+{
+	char	*tmp;
+
+	tmp = ft_strdup(dest);
+	free(dest);
+	dest = malloc(ft_strlen(tmp) + size + 1);
+	if (!dest)
+		return (NULL);
+	ft_strlcpy(dest, tmp, ft_strlen(tmp) + 1);
+	free(tmp);
+	return (dest);
+}
+
+char	*ft_reallocat(char *dest, char src)
+{
+	int	i;
+
+	i = 0;
+	dest = ft_realloc(dest, 1);
+	while (dest[i] != '\0')
+		i++;
+	dest[i] = src;
+	i++;
+	dest[i] = '\0';
+	return (dest);
+}
+
 void	ft_recv_char(int signal, siginfo_t *s, void *osef)
 {
 	static int		i = 0;
 	static char		c = 0;
+	static char		*str = NULL;
 
 	(void)osef;
+	if (!str || !str[0])
+		str = ft_libftcalloc(1, 1);
 	if (i < 9)
 	{
 		if (signal == SIGUSR1)
@@ -25,12 +56,14 @@ void	ft_recv_char(int signal, siginfo_t *s, void *osef)
 		i++;
 		return ;
 	}
-	ft_printf("%c", c);
+	str = ft_reallocat(str, c);
+	// ft_printf("%c", c);
 	i = 0;
 	if (c == 0)
 	{
 		kill(s->si_pid, SIGUSR1);
-		ft_printf("\n");
+		ft_printf("%s\n", str);
+		// ft_printf("\n");
 		return ;
 	}
 	c = 0;
