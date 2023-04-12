@@ -6,65 +6,74 @@
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 14:21:33 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/03/24 16:58:59 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/04/12 14:58:11 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-int	g_re = 0;
+int	g_re;
 
-void	ft_kill(char *msg, int i, int j, int pid)
+void	ft_kill(char c, int pid)
 {
-	usleep(50);
-	if (msg[i] & (1 << j))
-		kill(pid, SIGUSR1);
-	else
-		kill(pid, SIGUSR2);
+	int	i;
+
+	i = 0;
+	while (i < 8)
+	{
+		g_re = 0;
+		if (c & (1 << i))
+			kill(pid, SIGUSR1);
+		else
+			kill(pid, SIGUSR2);
+		i++;
+		while (g_re != 1)
+			usleep(1);
+	}
 }
 
 void	ft_send_msg(int pid, char *msg)
 {
 	int	i;
-	int	j;
 
 	i = 0;
-	while (msg[i])
+	if (kill(pid, 0) < 0)
 	{
-		j = 0;
-		while (j < 9)
-			ft_kill(msg, i, j++, pid);
-		usleep(10);
-		kill(pid, SIGUSR1);
-		i++;
+		ft_printf("It ain't workin'\n");
+		exit(EXIT_FAILURE);
 	}
-	j = 0;
-	while (j < 9)
-		ft_kill(msg, i, j++, pid);
-	usleep(10);
-	kill(pid, SIGUSR1);
+	while (msg[i])
+		ft_kill(msg[i++], pid);
+	ft_kill(msg[i], pid);
 }
 
 void	ft_confirm(int signal)
 {
 	if (signal == SIGUSR1)
-	{
 		g_re = 1;
-		ft_printf("Message recu par le serveur");
-	}
 	else
-		g_re = 0;
+	{
+		ft_printf("Message recu par le serveur\n");
+		exit(EXIT_SUCCESS);
+	}
 }
 
 int	main(int argc, char **argv)
 {
+	int	pid;
+
 	if (argc != 3 || !argv[2])
 	{
 		ft_printf("Wrong format. Format should be: ./client [PID] [Message]\n");
-		return (-1);
+		exit(EXIT_FAILURE);
 	}
-	ft_send_msg(ft_libatoi(argv[1]), argv[2]);
-	while (g_re == 0)
-		signal(SIGUSR1, ft_confirm);
-	return (0);
+	signal(SIGUSR1, &ft_confirm);
+	signal(SIGUSR2, &ft_confirm);
+	pid = ft_libatoi(argv[1]);
+	if (pid <= 0)
+	{
+		ft_printf("Invalid PID\n");
+		exit(EXIT_FAILURE);
+	}
+	ft_send_msg(pid, argv[2]);
 }

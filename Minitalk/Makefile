@@ -1,12 +1,16 @@
+MAKEFLAGS += --silent
+
 NAME = libft.a
 CLIENT_NAME = client
 SERVER_NAME = server
 
-GCC = gcc
+GCC = cc
 FLAGS = -Wall -Wextra -Werror -g
 
 CLIENT_SRC = client.c
 SERVER_SRC = server.c
+OBJS_C = ${CLIENT_SRC:.c=.o}
+OBJS_S = ${SERVER_SRC:.c=.o}
 
 all: ${NAME} ${CLIENT_NAME} ${SERVER_NAME}
 
@@ -15,19 +19,18 @@ all: ${NAME} ${CLIENT_NAME} ${SERVER_NAME}
 
 ${NAME}:
 	make -C Libft/
-	cp Libft/libft.a .
-	ar rc ${NAME}
 
-${CLIENT_NAME}: ${NAME}
-	${GCC} ${FLAGS} -o ${CLIENT_NAME} ${CLIENT_SRC} ${NAME}
+${CLIENT_NAME}: ${OBJS_C}
+	${GCC} ${FLAGS} -o ${CLIENT_NAME} ${OBJS_C} -L Libft/ -lft
 
-${SERVER_NAME}: ${NAME}
-	${GCC} ${FLAGS} -o ${SERVER_NAME} ${SERVER_SRC} ${NAME}
+${SERVER_NAME}: ${OBJS_S}
+	${GCC} ${FLAGS} -o ${SERVER_NAME} ${OBJS_S} -L Libft/ -lft
 
 bonus: all
 
 clean:
 	make clean -C Libft/
+	rm -f ${OBJS_S} ${OBJS_C}
 
 fclean: clean
 	make fclean -C Libft/

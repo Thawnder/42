@@ -6,7 +6,7 @@
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 14:21:48 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/03/24 16:48:27 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/04/12 16:03:50 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,57 +15,58 @@
 char	*ft_realloc(char *dest, int size)
 {
 	char	*tmp;
+	int		len;
 
-	tmp = ft_strdup(dest);
-	free(dest);
-	dest = malloc(ft_strlen(tmp) + size + 1);
-	if (!dest)
+	len = ft_strlen(dest);
+	tmp = malloc(len + size + 1);
+	if (!tmp)
 		return (NULL);
-	ft_strlcpy(dest, tmp, ft_strlen(tmp) + 1);
-	free(tmp);
-	return (dest);
+	ft_memcpy(tmp, dest, len + 1);
+	free(dest);
+	return (tmp);
 }
 
-char	*ft_reallocat(char *dest, char src)
+char	*ft_reallocat(char *dest, char c)
 {
 	int	i;
 
-	i = 0;
-	dest = ft_realloc(dest, 1);
-	while (dest[i] != '\0')
-		i++;
-	dest[i] = src;
+	if (!dest)
+		dest = ft_calloc(1, 1);
+	i = ft_strlen(dest);
+	if (i % 100 == 0)
+		dest = ft_realloc(dest, 100);
+	dest[i] = c;
 	i++;
 	dest[i] = '\0';
 	return (dest);
 }
 
-void	ft_recv_char(int signal, siginfo_t *s, void *osef)
+void	ft_recv_char(int signal, siginfo_t *s, void *idc)
 {
 	static int		i = 0;
 	static char		c = 0;
 	static char		*str = NULL;
 
-	(void)osef;
-	if (!str || !str[0])
-		str = ft_libftcalloc(1, 1);
-	if (i < 9)
+	(void)idc;
+	if (i < 8)
 	{
-		if (signal == SIGUSR1)
-			c = c | 1 << i;
-		i++;
-		return ;
+		c = c | (signal == SIGUSR1) << i;
+		if (++i < 8)
+			kill(s->si_pid, SIGUSR1);
+		if (i < 8)
+			return ;
 	}
 	str = ft_reallocat(str, c);
-	// ft_printf("%c", c);
 	i = 0;
 	if (c == 0)
 	{
-		kill(s->si_pid, SIGUSR1);
-		ft_printf("%s\n", str);
-		// ft_printf("\n");
+		kill(s->si_pid, SIGUSR2);
+		ft_printf("%s, taille: %d\n", str, ft_strlen(str));
+		free(str);
+		str = NULL;
 		return ;
 	}
+	kill(s->si_pid, SIGUSR1);
 	c = 0;
 }
 
