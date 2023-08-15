@@ -6,7 +6,7 @@
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 17:36:49 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/08/03 18:17:58 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/08/10 17:01:45 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ void	sort_main(t_list **a, t_list **b, t_info **info)
 {
 	ft_push(b, a, info, 'b');
 	ft_push(b, a, info, 'b');
-	while ((*info)->size_a > ft_max(3, (*info)->start_nb))
+	while ((*info)->size_a > (*info)->start_nb)
 	{
 		update_minmax(*b, info);
 		choose_best(*a, *b, info);

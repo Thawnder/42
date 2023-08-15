@@ -6,7 +6,7 @@
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/09 16:54:53 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/08/09 18:31:22 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/08/10 16:27:33 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,17 @@ int	main(int argc, char **argv)
 	int		size;
 
 	if (argc < 2)
-	{
-		checker(argc, NULL, NULL);
 		exit(EXIT_FAILURE);
-	}
 	b = NULL;
 	init_all_checker(argc, argv, &a);
 	size = ft_lstsize(a);
-	checker(argc, &a, &b);
+	if (size == 1)
+	{
+		ft_printf("OK\n");
+		free_list(&a);
+		exit(EXIT_FAILURE);
+	}
+	checker(&a, &b);
 	if (b || ft_lstsize(a) != size || !is_sorted(a))
 		ft_printf("KO\n");
 	else

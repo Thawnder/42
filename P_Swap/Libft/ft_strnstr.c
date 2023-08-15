@@ -6,7 +6,7 @@
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 15:37:13 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/02/06 17:57:42 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/08/15 17:34:11 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*ft_strnstr(const char *big, const char *little, size_t len)
 	i = 0;
 	j = 0;
 	while (big[i] && i < len)
-	{	
+	{
 		if (big[i] == little[j])
 		{
 			if (!little[j + 1])

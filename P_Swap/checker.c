@@ -6,7 +6,7 @@
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 14:53:12 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/08/09 18:32:47 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/08/10 17:08:58 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,15 +72,13 @@ char	*ft_realloc(char *dest, char src, int size)
 	return (tmp);
 }
 
-void	checker(int argc, t_list **a, t_list **b)
+void	checker(t_list **a, t_list **b)
 {
 	char	*buf;
 	char	*tmp;
 	int		debut;
 
 	debut = 0;
-	if (argc < 2 && free_all(a, b))
-		exit(EXIT_FAILURE);
 	buf = ft_calloc(2, 1);
 	tmp = ft_calloc(1, 1);
 	while (read(0, buf, 1))
@@ -89,7 +87,7 @@ void	checker(int argc, t_list **a, t_list **b)
 		if (tmp[ft_strlen(tmp) - 1] == '\n')
 		{
 			if (parse(a, b, &tmp[debut]) == -1 && free_buffers(buf, tmp))
-				print_error(0);
+				print_error();
 			debut = ft_strlen(tmp);
 		}
 	}

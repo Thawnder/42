@@ -6,7 +6,7 @@
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 17:29:15 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/08/09 18:31:09 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/08/10 17:20:10 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	check_int(const char *nptr, int i, int sign)
 	return (1);
 }
 
-int	ft_libatoi(const char *nptr, int flag)
+int	ft_libatoi(const char *nptr, t_list **a)
 {
 	int				i;
 	int				sign;
@@ -50,12 +50,14 @@ int	ft_libatoi(const char *nptr, int flag)
 		i++;
 	if (nptr[i] == '-' || nptr[i] == '+')
 	{
-		if (nptr[i] == '-')
+		if (nptr[i++] == '-')
 			sign *= -1;
-		i++;
 	}
 	if ((nptr[i] == '-' || nptr[i] == '+') || (!check_int(&nptr[i], 0, sign)))
-		print_error(flag);
+	{
+		free_list(a);
+		print_error();
+	}
 	while (nptr[i] >= '0' && nptr[i] <= '9')
 	{
 		res = res * 10 + nptr[i] - 48;

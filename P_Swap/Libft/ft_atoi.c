@@ -6,7 +6,7 @@
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 17:29:15 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/08/09 17:33:53 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/08/15 17:37:04 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@ int	check_int(const char *nptr, int i, int sign)
 	while (nptr[len] >= '0' && nptr[len] <= '9')
 		len++;
 	if ((len > 10)
-		|| (len == 10 &&
-			(nptr[i] > '2' || nptr[i + 1] > '1' || nptr[i + 2] > '4'
-			 || nptr[i + 3] > '7' || nptr[i + 4] > '4' || nptr[i + 5] > '8'
-			 || nptr[i + 6] > '3' || nptr[i + 7] > '6' || nptr[i + 8] > '4'
-			 || ((sign == 1 && nptr[i + 9] > '7') 
-				 || (sign == -1 && nptr[i + 9] > '8')))))
+		|| (len == 10
+			&& (nptr[i] > '2' || nptr[i + 1] > '1' || nptr[i + 2] > '4'
+				|| nptr[i + 3] > '7' || nptr[i + 4] > '4' || nptr[i + 5] > '8'
+				|| nptr[i + 6] > '3' || nptr[i + 7] > '6' || nptr[i + 8] > '4'
+				|| ((sign == 1 && nptr[i + 9] > '7') 
+					|| (sign == -1 && nptr[i + 9] > '8')))))
 		return (0);
 	return (1);
 }
@@ -44,9 +44,8 @@ int	ft_safeatoi(const char *nptr)
 		i++;
 	if (nptr[i] == '-' || nptr[i] == '+')
 	{
-		if (nptr[i] == '-')
+		if (nptr[i++] == '-')
 			sign *= -1;
-		i++;
 	}
 	if ((nptr[i] == '-' || nptr[i] == '+') || (!check_int(&nptr[i], 0, sign)))
 	{

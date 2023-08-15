@@ -6,7 +6,7 @@
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 11:52:09 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/08/09 17:32:37 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/08/10 16:53:35 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,19 @@ t_list	*ft_lstnew(int data)
 	return (new);
 }
 
-void	check_dup(t_list *lst, int tofind, int flag)
+void	check_dup(t_list *lst, int tofind)
 {
-	while (lst)
+	t_list	*tmp;
+
+	tmp = lst;
+	while (tmp)
 	{
-		if (lst->data == tofind)
+		if (tmp->data == tofind)
 		{
 			free_list(&lst);
-			print_error(flag);
+			print_error();
 		}
-		lst = lst->next;
+		tmp = tmp->next;
 	}
 }
 

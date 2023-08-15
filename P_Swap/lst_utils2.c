@@ -6,7 +6,7 @@
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 16:29:48 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/08/09 17:56:51 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/08/10 17:08:33 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,8 @@ void	free_list(t_list **a)
 	}
 }
 
-void	print_error(int flag)
+void	print_error(void)
 {
-	if (flag == 1)
-		checker(0, NULL, NULL);
 	write(2, "Error\n", 6);
 	exit(EXIT_FAILURE);
 }

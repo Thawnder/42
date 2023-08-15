@@ -6,7 +6,7 @@
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:27:40 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/08/09 18:34:08 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/08/10 17:19:13 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,10 @@ typedef struct s_info
 void	init_all(int argc, char **argv, t_list **a, t_info **info);
 void	init_all_checker(int argc, char **argv, t_list **a);
 t_list	*ft_lstnew(int content);
-void	decompose_arg(char *arg, t_list **a, int flag);
-void	check_arg(char *arg, t_list *lst, int flag);
-int		check_nb(char *arg, t_list *lst, int flag);
-void	check_dup(t_list *lst, int tofind, int flag);
+void	decompose_arg(char *arg, t_list **a);
+void	check_arg(char *arg, t_list *lst);
+int		check_nb(char *arg, t_list *lst);
+void	check_dup(t_list *lst, int tofind);
 void	ft_lstadd_back(t_list **lst, t_list *new);
 int		ft_lstsize(t_list *lst);
 t_list	*ft_lstlast(t_list *lst);
@@ -77,8 +77,8 @@ void	sort_three(t_list **lst, t_info **info);
 void	partial_sort(t_list **a, t_list **b, t_info **info);
 int		get_final_idx(t_list *elt, t_list *lst, t_info *info);
 void	free_list(t_list **a);
-void	checker(int argc, t_list **a, t_list **b);
-void	print_error(int flag);
+void	checker(t_list **a, t_list **b);
+void	print_error(void);
 int		free_all(t_list **a, t_list **b);
 int		free_buffers(char *buf, char *tmp);
 char	*ft_realloc(char *dest, char src, int size);
@@ -87,6 +87,6 @@ int		is_sorted(t_list *a);
 void	sort_main(t_list **a, t_list **b, t_info **info);
 void	ft_back_b(t_list **a, t_list **b, t_info **info);
 void	ft_back_bis(t_list **a, t_list **b, t_info **info);
-int		ft_libatoi(const char *nptr, int flag);
+int		ft_libatoi(const char *nptr, t_list **a);
 
 #endif

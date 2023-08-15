@@ -6,7 +6,7 @@
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 14:14:48 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/08/08 11:29:33 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/08/10 17:24:29 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	do_rrotate(t_list **lst)
 {
 	t_list	*tmp;
 
-	if (*lst)
+	if (*lst && (*lst)->next)
 	{
 		tmp = *lst;
 		while (tmp->next->next)
