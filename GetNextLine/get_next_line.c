@@ -6,7 +6,7 @@
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 14:15:07 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/08/17 11:35:24 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/08/17 12:23:41 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static char	*ft_read_line(int fd, char *line, char **res)
 	int		r;
 	int		n;
 
-	buffer = (char *)malloc(BUFFER_SIZE + 1);
+	buffer = malloc(BUFFER_SIZE + 1);
 	r = 1;
 	while (r != 0 && !ft_strchr(line, '\n'))
 	{
@@ -65,7 +65,5 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE < 1 || read(fd, 0, 0) < 0)
 		return (free(line), line = NULL, NULL);
-	res = NULL;
-	line = ft_read_line(fd, line, &res);
-	return (res);
+	return (res = NULL, line = ft_read_line(fd, line, &res), res);
 }

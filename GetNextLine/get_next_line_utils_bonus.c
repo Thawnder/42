@@ -6,7 +6,7 @@
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 16:54:57 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/03/16 14:16:56 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/08/17 12:25:11 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	j = 0;
 	while (s2[j])
 		res[i++] = s2[j++];
-	res[i] = 0;
-	free(s1);
-	return (res);
+	return (res[i] = 0, free(s1), res);
 }
 
 char	*ft_strchr(char *s, int c)
@@ -87,8 +85,7 @@ char	*ft_strdup(char *s)
 		str[i] = ((char *)s)[i];
 		i++;
 	}
-	str[i] = 0;
-	return (str);
+	return (str[i] = 0, str);
 }
 
 char	*ft_substr(char *s, unsigned int start, size_t len)
@@ -114,6 +111,5 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 		str[i] = ((char *)s)[i + start];
 		i++;
 	}
-	str[i] = 0;
-	return (str);
+	return (str[i] = 0, str);
 }

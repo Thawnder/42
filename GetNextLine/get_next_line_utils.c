@@ -6,7 +6,7 @@
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 16:54:57 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/08/17 11:26:11 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/08/17 12:24:34 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	*ft_strjoin(char *s1, char *s2)
 		return (ft_strdup(s2));
 	if (!s2)
 		return (ft_strdup(s1));
-	res = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	res = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (!res)
 		return (NULL);
 	j = 0;
@@ -47,9 +47,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	j = 0;
 	while (s2[j])
 		res[i++] = s2[j++];
-	res[i] = 0;
-	free(s1);
-	return (res);
+	return (res[i] = 0, free(s1), res);
 }
 
 char	*ft_strchr(char *s, int c)
@@ -78,7 +76,7 @@ char	*ft_strdup(char *s)
 	size_t	len;
 
 	len = ft_strlen(s);
-	str = (char *)malloc(len + 1);
+	str = malloc(len + 1);
 	if (!str)
 		return (NULL);
 	i = 0;
@@ -87,8 +85,7 @@ char	*ft_strdup(char *s)
 		str[i] = ((char *)s)[i];
 		i++;
 	}
-	str[i] = 0;
-	return (str);
+	return (str[i] = 0, str);
 }
 
 char	*ft_substr(char *s, unsigned int start, size_t len)
@@ -105,7 +102,7 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 		size = ft_strlen(s) - start;
 	else
 		size = len;
-	str = (char *)malloc(size + 1);
+	str = malloc(size + 1);
 	if (!str)
 		return (NULL);
 	i = 0;
@@ -114,6 +111,5 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 		str[i] = ((char *)s)[i + start];
 		i++;
 	}
-	str[i] = 0;
-	return (str);
+	return (str[i] = 0, str);
 }

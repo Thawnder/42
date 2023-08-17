@@ -6,7 +6,7 @@
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 14:13:06 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/08/16 15:52:59 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/08/17 11:51:00 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include <unistd.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1024
+#  define BUFFER_SIZE 512
 # endif
 
 char	*get_next_line(int fd);

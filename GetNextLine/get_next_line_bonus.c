@@ -6,7 +6,7 @@
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 14:15:07 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/08/17 11:37:42 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/08/17 12:23:48 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,5 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE < 1 || read(fd, 0, 0) < 0 || fd >= 1024)
 		return (free(line[fd]), line[fd] = NULL, NULL);
-	res = NULL;
-	line[fd] = ft_read_line(fd, line[fd], &res);
-	return (res);
+	return (res = NULL, line[fd] = ft_read_line(fd, line[fd], &res), res);
 }
