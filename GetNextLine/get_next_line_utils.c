@@ -6,7 +6,7 @@
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 16:54:57 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/03/15 17:35:54 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/08/17 11:26:11 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	*ft_strjoin(char *s1, char *s2)
 		return (ft_strdup(s2));
 	if (!s2)
 		return (ft_strdup(s1));
-	res = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	res = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (!res)
 		return (NULL);
 	j = 0;
@@ -78,7 +78,7 @@ char	*ft_strdup(char *s)
 	size_t	len;
 
 	len = ft_strlen(s);
-	str = malloc(len + 1);
+	str = (char *)malloc(len + 1);
 	if (!str)
 		return (NULL);
 	i = 0;
@@ -105,7 +105,7 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 		size = ft_strlen(s) - start;
 	else
 		size = len;
-	str = malloc(size + 1);
+	str = (char *)malloc(size + 1);
 	if (!str)
 		return (NULL);
 	i = 0;
