@@ -6,7 +6,7 @@
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 16:54:57 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/08/17 12:25:11 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/08/17 14:21:56 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,12 @@ char	*ft_strchr(char *s, int c)
 		return (NULL);
 	while (s[i])
 	{
-		if (((unsigned char *)s)[i] == (unsigned char)c)
-			return ((char *)s + i);
+		if (s[i] == c)
+			return (s + i);
 		i++;
 	}
-	if ((unsigned char)c == 0)
-		return ((char *)s + i);
+	if (c == 0)
+		return (s + i);
 	else
 		return (0);
 }
@@ -82,7 +82,7 @@ char	*ft_strdup(char *s)
 	i = 0;
 	while (i < len)
 	{
-		str[i] = ((char *)s)[i];
+		str[i] = s[i];
 		i++;
 	}
 	return (str[i] = 0, str);
@@ -108,7 +108,7 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 	i = 0;
 	while (i < size && s)
 	{
-		str[i] = ((char *)s)[i + start];
+		str[i] = s[i + start];
 		i++;
 	}
 	return (str[i] = 0, str);
