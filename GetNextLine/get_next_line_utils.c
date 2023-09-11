@@ -6,7 +6,7 @@
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 16:54:57 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/08/17 14:21:05 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/08/17 16:44:52 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,26 +71,26 @@ char	*ft_strchr(char *s, int c)
 
 char	*ft_strdup(char *s)
 {
-	char	*str;
+	char	*res;
 	size_t	i;
 	size_t	len;
 
 	len = ft_strlen(s);
-	str = malloc(len + 1);
-	if (!str)
+	res = malloc(len + 1);
+	if (!res)
 		return (NULL);
 	i = 0;
 	while (i < len)
 	{
-		str[i] = s[i];
+		res[i] = s[i];
 		i++;
 	}
-	return (str[i] = 0, str);
+	return (res[i] = 0, res);
 }
 
 char	*ft_substr(char *s, unsigned int start, size_t len)
 {
-	char	*str;
+	char	*res;
 	size_t	size;
 	size_t	i;
 
@@ -102,14 +102,14 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 		size = ft_strlen(s) - start;
 	else
 		size = len;
-	str = malloc(size + 1);
-	if (!str)
+	res = malloc(size + 1);
+	if (!res)
 		return (NULL);
 	i = 0;
 	while (i < size && s)
 	{
-		str[i] = s[i + start];
+		res[i] = s[i + start];
 		i++;
 	}
-	return (str[i] = 0, str);
+	return (res[i] = 0, res);
 }

@@ -6,7 +6,7 @@
 /*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 14:15:07 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/08/17 12:23:41 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/08/17 16:34:05 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,10 @@ static char	*ft_cut_line(char *str, char *line)
 	res = NULL;
 	n = ft_strlen(str);
 	if (!line || !line[n])
-	{
-		free(line);
-		return (res);
-	}
+		return (free(line), res);
 	if (line[n])
 		res = ft_substr(line, n, ft_strlen(line) - n);
-	free(line);
-	return (res);
+	return (free(line), res);
 }
 
 static char	*ft_read_line(int fd, char *line, char **res)
@@ -54,8 +50,7 @@ static char	*ft_read_line(int fd, char *line, char **res)
 	}
 	else
 		*res = NULL;
-	line = ft_cut_line(*res, line);
-	return (line);
+	return (line = ft_cut_line(*res, line));
 }
 
 char	*get_next_line(int fd)
