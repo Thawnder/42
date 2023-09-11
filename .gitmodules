@@ -1,0 +1,3 @@
+[submodule "Minishell"]
+	path = Minishell
+	url = git@github.com:Thawnder/Minishell.git
