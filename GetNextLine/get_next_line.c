@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 14:15:07 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/08/17 16:34:05 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/09/18 10:48:49 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,10 @@ static char	*ft_cut_line(char *str, char *line)
 	int		n;
 
 	res = NULL;
-	n = ft_strlen(str);
+	if (str)
+		n = ft_strlen(str);
+	else
+		n = 0;
 	if (!line || !line[n])
 		return (free(line), res);
 	if (line[n])
