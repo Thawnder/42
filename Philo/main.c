@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 11:06:13 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/10/19 12:50:12 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/10/19 16:59:18 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ int	main(int argc, char **argv)
 	if (argc < 5 || argc > 6)
 		return (printf("Invalid number of args\n"), -1);
 	data.info.dead = 0;
+	data.info.finished = 0;
 	data.info.max_meals = -1;
 	data.info.gang_size = (int) ft_atoll(argv[1]);
 	data.info.forks = ft_calloc(data.info.gang_size, sizeof(pthread_mutex_t));

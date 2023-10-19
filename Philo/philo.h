@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:33:21 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/10/19 16:40:19 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/10/19 16:58:57 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ typedef struct s_info
 	int				gang_size;
 	int				max_meals;
 	int				dead;
+	int				finished;
 	t_alltime		time_to_die;
 	t_alltime		time_to_eat;
 	t_alltime		time_to_sleep;
