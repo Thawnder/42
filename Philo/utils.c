@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 16:43:05 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/10/19 12:33:56 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/10/19 16:41:09 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ t_alltime	get_time(void)
 	return (t.tv_sec * 1000 + t.tv_usec / 1000);
 }
 
-void	protected_print(pthread_mutex_t m, t_philo *philo)
+void	protected_print(t_philo *philo)
 {
-	pthread_mutex_lock(&m);
+	pthread_mutex_lock(&philo->info->write);
 	if (philo->state == EATING)
 		printf("%llu %d is eating\n",
 			get_time() - philo->info->start_time, philo->id + 1);
@@ -40,5 +40,5 @@ void	protected_print(pthread_mutex_t m, t_philo *philo)
 		printf("%llu %d is dead\n",
 			get_time() - philo->info->start_time, philo->id + 1);
 	}
-	pthread_mutex_unlock(&m);
+	pthread_mutex_unlock(&philo->info->write);
 }

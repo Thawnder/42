@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:50:07 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/10/19 12:46:54 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/10/19 16:40:46 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,16 +29,14 @@ void	*timer(void *ptr)
 				pthread_mutex_lock(&data->philo[i].m_state);
 				data->philo[i].state = DEAD;
 				pthread_mutex_unlock(&data->philo[i].m_state);
-				protected_print(data->info.write, &data->philo[i]);
+				protected_print(&data->philo[i]);
+				return (pthread_mutex_unlock(&data->philo[i].lastmeal),
+					(void *)0);
 			}
 			pthread_mutex_unlock(&data->philo[i].lastmeal);
 		}
-		pthread_mutex_lock(&data->info.die);
-		if (data->info.dead)
-			break ;
-		pthread_mutex_unlock(&data->info.die);
 	}
-	return (pthread_mutex_unlock(&data->info.die), (void *)0);
+	return ((void *)0);
 }
 
 int	dontstop_believin(t_philo *philo)
@@ -80,7 +78,7 @@ void	uber_eat(t_philo *philo)
 	pthread_mutex_lock(&philo->lastmeal);
 	philo->last_meal = get_time();
 	pthread_mutex_unlock(&philo->lastmeal);
-	protected_print(philo->info->write, philo);
+	protected_print(philo);
 	usleep(philo->info->time_to_eat * 1000);
 	if (philo->id % 2 == 0)
 		pthread_mutex_unlock(philo->left);
@@ -101,15 +99,19 @@ void	*set_philo(void *ptr)
 	while (dontstop_believin(philo))
 	{
 		uber_eat(philo);
+		if (philo->info->dead)
+			break ;
 		pthread_mutex_lock(&philo->m_state);
 		philo->state = SLEEPING;
 		pthread_mutex_unlock(&philo->m_state);
-		protected_print(philo->info->write, philo);
+		protected_print(philo);
 		usleep(philo->info->time_to_sleep * 1000);
+		if (philo->info->dead)
+			break ;
 		pthread_mutex_lock(&philo->m_state);
 		philo->state = THINKING;
 		pthread_mutex_unlock(&philo->m_state);
-		protected_print(philo->info->write, philo);
+		protected_print(philo);
 	}
 	pthread_mutex_lock(&philo->info->write);
 	printf("%d sort\n", philo->id + 1);

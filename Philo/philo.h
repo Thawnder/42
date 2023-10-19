@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:33:21 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/10/19 12:19:16 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/10/19 16:40:19 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,6 @@ typedef struct s_data
 void		*set_philo(void *ptr);
 void		*timer(void *ptr);
 t_alltime	get_time(void);
-void		protected_print(pthread_mutex_t m, t_philo *philo);
+void		protected_print(t_philo *philo);
 
 #endif
