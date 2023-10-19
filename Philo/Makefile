@@ -1,7 +1,7 @@
 MAKEFLAGS += --silent
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -g
-SRCS = main.c threads.c
+SRCS = main.c threads.c utils.c
 OBJS_EXEC = ${SRCS:.c=.o}
 EXEC = philo
 
@@ -16,13 +16,13 @@ ${EXEC}: ${OBJS_EXEC}
 clean:
 	rm -f ${OBJS_BONUS}
 	rm -f ${OBJS_EXEC}\
-		&& echo "\033[1;33m~| Nettoyage des .o : OK |~\033[0m"\
+		&& echo "\033[1;36m~| Nettoyage des .o : OK |~\033[0m"\
 		|| echo "\033[0;31m~| Nettoyage des $@ : Erreur |~\033[0m"
 
 fclean: clean
 	rm -f ${BONUS}
 	rm -f ${EXEC} \
-		&& echo "\033[1;33m~| Nettoyage des executables : OK |~\033[0m"\
+		&& echo "\033[1;36m~| Nettoyage des executables : OK |~\033[0m"\
 		|| echo "\033[0;31m~| Nettoyage des $@ : Erreur |~\033[0m"
 
 re: fclean all

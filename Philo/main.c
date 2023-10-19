@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpleutin <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 11:06:13 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/10/17 18:11:17 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/10/19 12:50:12 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,30 +61,33 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	return (ptr);
 }
 
-void	init_all(t_data *data, int i)
+void	init_all(t_data *data, char **argv, int i)
 {
-	i = -1;
-	pthread_mutex_init(&data->write, NULL);
+	data->info.time_to_die = ft_atoll(argv[2]);
+	data->info.time_to_eat = ft_atoll(argv[3]);
+	data->info.time_to_sleep = ft_atoll(argv[4]);
+	pthread_mutex_init(&data->info.write, NULL);
+	pthread_mutex_init(&data->info.die, NULL);
 	data->philo = ft_calloc(data->info.gang_size, sizeof(t_philo));
 	while (++i < data->info.gang_size)
 	{
 		data->philo[i].info = &data->info;
 		data->philo[i].id = i;
-		data->philo[i].last_meal = get_time();
-		pthread_mutex_init(&data->philo[i].info->forks[i], NULL);
+		pthread_mutex_init(&data->philo[i].m_state, NULL);
+		pthread_mutex_init(&data->philo[i].meal, NULL);
+		pthread_mutex_init(&data->philo[i].lastmeal, NULL);
+		pthread_mutex_init(&data->info.forks[i], NULL);
 	}
 	i = -1;
 	while (++i < data->info.gang_size)
 	{
 		if (i == 0)
-			data->philo[i].left = &data->info.forks[data->info.gang_size];
+			data->philo[i].left = &data->info.forks[data->info.gang_size - 1];
 		else
 			data->philo[i].left = &data->info.forks[i - 1];
-		if (i == data->info.gang_size - 1)
-			data->philo[i].right = &data->info.forks[0];
-		else
-			data->philo[i].right = &data->info.forks[i];
+		data->philo[i].right = &data->info.forks[i];
 	}
+	data->info.start_time = get_time();
 }
 
 void	free_all(t_data *data)
@@ -93,8 +96,15 @@ void	free_all(t_data *data)
 
 	i = -1;
 	while (++i < data->info.gang_size)
+	{
 		pthread_mutex_destroy(&data->philo[i].info->forks[i]);
-	pthread_mutex_destroy(&data->write);
+		pthread_mutex_destroy(&data->philo[i].m_state);
+		pthread_mutex_destroy(&data->philo[i].meal);
+		pthread_mutex_destroy(&data->philo[i].lastmeal);
+	}
+	pthread_mutex_destroy(&data->info.write);
+	pthread_mutex_destroy(&data->info.die);
+	free(data->info.forks);
 	free(data->philo);
 }
 
@@ -104,24 +114,23 @@ int	main(int argc, char **argv)
 	int		i;
 
 	if (argc < 5 || argc > 6)
-	{
-		printf("Invalid number of args\n");
-		return (-1);
-	}
+		return (printf("Invalid number of args\n"), -1);
+	data.info.dead = 0;
+	data.info.max_meals = -1;
 	data.info.gang_size = (int) ft_atoll(argv[1]);
-	data.info.time_to_die = ft_atoll(argv[2]);
-	data.info.time_to_eat = ft_atoll(argv[3]);
-	data.info.time_to_sleep = ft_atoll(argv[4]);
-	data.info.nbr_of_meals = -1;
+	data.info.forks = ft_calloc(data.info.gang_size, sizeof(pthread_mutex_t));
 	if (argc == 6)
-		data.info.nbr_of_meals = (int) ft_atoll(argv[5]);
+		data.info.max_meals = (int) ft_atoll(argv[5]);
 	i = -1;
-	init_all(&data, i);
-	pthread_create(&data->timer_tid, NULL, &timer, &data);
-	data.info.start_time = get_time();
-	while (++i < data->info.gang_size)
-		pthread_create(&data->philo[i].tid, NULL, &set_philo, &data->philo[i]);
-	pthread_join(&data->timer_tid, NULL);
-	free_all(&data);
-	return (0);
+	init_all(&data, argv, i);
+	while (++i < data.info.gang_size)
+		data.philo[i].last_meal = get_time();
+	pthread_create(&data.timer_tid, NULL, &timer, &data);
+	i = -1;
+	while (++i < data.info.gang_size)
+		pthread_create(&data.philo[i].tid, NULL, &set_philo, &data.philo[i]);
+	i = -1;
+	while (++i < data.info.gang_size)
+		pthread_join(data.philo[i].tid, NULL);
+	return (pthread_join(data.timer_tid, NULL), free_all(&data), 0);
 }
