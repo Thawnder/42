@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:33:21 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/10/19 16:58:57 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/10/23 16:14:51 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef struct s_info
 	t_alltime		time_to_eat;
 	t_alltime		time_to_sleep;
 	t_alltime		start_time;
+	pthread_mutex_t start;
 	pthread_mutex_t	write;
 	pthread_mutex_t	die;
 	pthread_mutex_t	*forks;

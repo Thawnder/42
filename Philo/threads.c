@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:50:07 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/10/19 18:11:42 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/10/23 16:32:29 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ void	*timer(void *ptr)
 	int		i;
 
 	data = (t_data *)ptr;
+	pthread_mutex_lock(&data->info.start);
+	pthread_mutex_unlock(&data->info.start);
 	while (data->info.finished < data->info.gang_size)
 	{
 		i = -1;
@@ -56,14 +58,16 @@ void	*timer(void *ptr)
 void	uber_fork(t_philo *philo, pthread_mutex_t *one, pthread_mutex_t *two)
 {
 	pthread_mutex_lock(one);
-	if (!dontstop_believin(philo))
+	pthread_mutex_lock(two);
+	if (!dontstop_believin(philo) && !pthread_mutex_unlock(one)
+		&& !pthread_mutex_unlock(two))
 		return ;
 	pthread_mutex_lock(&philo->info->write);
 	printf("%llu %d has taken a fork\n",
 		get_time() - philo->info->start_time, philo->id + 1);
 	pthread_mutex_unlock(&philo->info->write);
-	pthread_mutex_lock(two);
-	if (!dontstop_believin(philo))
+	if (!dontstop_believin(philo) && !pthread_mutex_unlock(one)
+		&& !pthread_mutex_unlock(two))
 		return ;
 	pthread_mutex_lock(&philo->info->write);
 	printf("%llu %d has taken a fork\n",

@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 16:43:05 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/10/19 17:21:55 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/10/23 16:21:56 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ t_alltime	get_time(void)
 
 void	protected_print(t_philo *philo)
 {
+	pthread_mutex_lock(&philo->m_state);
 	pthread_mutex_lock(&philo->info->write);
 	if (philo->state == EATING)
 		printf("%llu %d is eating\n",
@@ -40,5 +41,6 @@ void	protected_print(t_philo *philo)
 		printf("%llu %d is dead\n",
 			get_time() - philo->info->start_time, philo->id + 1);
 	}
+	pthread_mutex_unlock(&philo->m_state);
 	pthread_mutex_unlock(&philo->info->write);
 }
