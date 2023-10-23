@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 11:06:13 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/10/23 16:16:36 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/10/23 18:15:42 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ void	init_all(t_data *data, char **argv, int i)
 	data->info.time_to_die = ft_atoll(argv[2]);
 	data->info.time_to_eat = ft_atoll(argv[3]);
 	data->info.time_to_sleep = ft_atoll(argv[4]);
-	pthread_mutex_init(&data->info.write, NULL);
 	pthread_mutex_init(&data->info.die, NULL);
 	pthread_mutex_init(&data->info.start, NULL);
 	data->philo = ft_calloc(data->info.gang_size, sizeof(t_philo));
@@ -76,7 +75,7 @@ void	init_all(t_data *data, char **argv, int i)
 		data->philo[i].id = i;
 		pthread_mutex_init(&data->philo[i].m_state, NULL);
 		pthread_mutex_init(&data->philo[i].meal, NULL);
-		pthread_mutex_init(&data->philo[i].lastmeal, NULL);
+		pthread_mutex_init(&data->philo[i].last, NULL);
 		pthread_mutex_init(&data->info.forks[i], NULL);
 	}
 	i = -1;
@@ -96,12 +95,17 @@ void	free_all(t_data *data)
 	int	i;
 
 	i = -1;
+	pthread_mutex_unlock(&data->info.start);
+	while (++i < data->info.gang_size)
+		pthread_join(data->philo[i].tid, NULL);
+	pthread_join(data->timer_tid, NULL);
+	i = -1;
 	while (++i < data->info.gang_size)
 	{
 		pthread_mutex_destroy(&data->philo[i].info->forks[i]);
 		pthread_mutex_destroy(&data->philo[i].m_state);
 		pthread_mutex_destroy(&data->philo[i].meal);
-		pthread_mutex_destroy(&data->philo[i].lastmeal);
+		pthread_mutex_destroy(&data->philo[i].last);
 	}
 	pthread_mutex_destroy(&data->info.write);
 	pthread_mutex_destroy(&data->info.start);
@@ -125,6 +129,7 @@ int	main(int argc, char **argv)
 	if (argc == 6)
 		data.info.max_meals = (int) ft_atoll(argv[5]);
 	i = -1;
+	pthread_mutex_init(&data.info.write, NULL);
 	init_all(&data, argv, i);
 	while (++i < data.info.gang_size)
 		data.philo[i].last_meal = get_time();
@@ -133,9 +138,5 @@ int	main(int argc, char **argv)
 	i = -1;
 	while (++i < data.info.gang_size)
 		pthread_create(&data.philo[i].tid, NULL, &set_philo, &data.philo[i]);
-	i = -1;
-	pthread_mutex_unlock(&data.info.start);
-	while (++i < data.info.gang_size)
-		pthread_join(data.philo[i].tid, NULL);
-	return (pthread_join(data.timer_tid, NULL), free_all(&data), 0);
+	return (free_all(&data), 0);
 }
