@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:50:07 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/10/23 18:36:01 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/10/24 10:32:32 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,17 +70,17 @@ void	uber_fork(t_philo *philo, pthread_mutex_t *a, pthread_mutex_t *b, int f)
 		pthread_mutex_unlock(b);
 	if (f)
 		return ;
-	pthread_mutex_lock(&philo->info->write);
-	if (!nostop(philo) && !pthread_mutex_unlock(&philo->info->write)
+	if (!nostop(philo)
 		&& !pthread_mutex_unlock(a) && a != b && !pthread_mutex_unlock(b))
 		return ;
+	pthread_mutex_lock(&philo->info->write);
 	printf("%llu %d has taken a fork\n",
 		get_time() - philo->info->start_time, philo->id + 1);
 	pthread_mutex_unlock(&philo->info->write);
-	pthread_mutex_lock(&philo->info->write);
-	if ((a == b || !nostop(philo)) && !pthread_mutex_unlock(&philo->info->write)
-		&& !pthread_mutex_unlock(a) && a != b && !pthread_mutex_unlock(b))
+	if ((a == b || !nostop(philo)) && !pthread_mutex_unlock(a) && a != b
+		&& !pthread_mutex_unlock(b))
 		return ;
+	pthread_mutex_lock(&philo->info->write);
 	printf("%llu %d has taken a fork\n",
 		get_time() - philo->info->start_time, philo->id + 1);
 	pthread_mutex_unlock(&philo->info->write);
