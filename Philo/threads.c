@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:50:07 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/10/24 15:31:31 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/10/24 16:12:25 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,40 +21,44 @@ int	nostop(t_philo *philo)
 		return (pthread_mutex_unlock(&philo->info->die),
 			pthread_mutex_unlock(&philo->meal),
 			1);
+	pthread_mutex_lock(&philo->info->end);
 	if (!philo->info->dead && !(philo->info->max_meals == -1
 			&& philo->meals < philo->info->max_meals))
 		philo->info->finished += 1;
+	pthread_mutex_unlock(&philo->info->end);
 	return (pthread_mutex_unlock(&philo->info->die),
 		pthread_mutex_unlock(&philo->meal),
 		0);
 }
 
-void	*timer(void *ptr)
+void	*timer(void *ptr) // Norme a regler
 {
-	t_data	*data;
+	t_data	*d;
 	int		i;
 
-	data = (t_data *)ptr;
-	pthread_mutex_lock(&data->info.start);
-	pthread_mutex_unlock(&data->info.start);
-	while (data->info.finished < data->info.gang_size)
+	d = (t_data *)ptr;
+	pthread_mutex_lock(&d->info.start);
+	pthread_mutex_unlock(&d->info.start);
+	pthread_mutex_lock(&d->info.end);
+	while (d->info.finished < d->info.gang_size)
 	{
+		pthread_mutex_unlock(&d->info.end);
 		i = -1;
-		while (++i < data->info.gang_size)
+		while (++i < d->info.gang_size)
 		{
-			pthread_mutex_lock(&data->philo[i].last);
-			if (nostop(&data->philo[i]) && get_time()
-				- data->philo[i].last_meal > data->info.time_to_die + 1)
-			{
-				pthread_mutex_lock(&data->philo[i].m_state);
-				data->philo[i].state = DEAD;
-				pthread_mutex_unlock(&data->philo[i].m_state);
-				protected_print(&data->philo[i]);
-				return (pthread_mutex_unlock(&data->philo[i].last), (void *)0);
-			}
+			pthread_mutex_lock(&d->philo[i].last);
+			if (nostop(&d->philo[i]) && get_time()
+				- d->philo[i].last_meal > d->info.time_to_die + 1)
+				return (pthread_mutex_lock(&d->philo[i].m_state),
+					d->philo[i].state = DEAD,
+					pthread_mutex_unlock(&d->philo[i].m_state),
+					protected_print(&d->philo[i]),
+					pthread_mutex_unlock(&d->philo[i].last), (void *)0);
 			pthread_mutex_unlock(&data->philo[i].last);
 		}
+		pthread_mutex_lock(&philo->info->end);
 	}
+	pthread_mutex_unlock(&philo->info->end);
 	return ((void *)0);
 }
 

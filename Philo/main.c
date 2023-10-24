@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 11:06:13 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/10/23 18:15:42 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/10/24 15:55:00 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ void	free_all(t_data *data)
 	}
 	pthread_mutex_destroy(&data->info.write);
 	pthread_mutex_destroy(&data->info.start);
+	pthread_mutex_destroy(&data.info.end);
 	pthread_mutex_destroy(&data->info.die);
 	free(data->info.forks);
 	free(data->philo);
@@ -130,6 +131,7 @@ int	main(int argc, char **argv)
 		data.info.max_meals = (int) ft_atoll(argv[5]);
 	i = -1;
 	pthread_mutex_init(&data.info.write, NULL);
+	pthread_mutex_init(&data.info.end, NULL);
 	init_all(&data, argv, i);
 	while (++i < data.info.gang_size)
 		data.philo[i].last_meal = get_time();
