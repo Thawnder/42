@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:50:07 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/10/24 11:07:56 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/10/24 15:31:31 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	*timer(void *ptr)
 		{
 			pthread_mutex_lock(&data->philo[i].last);
 			if (nostop(&data->philo[i]) && get_time()
-				- data->philo[i].last_meal >= data->info.time_to_die)
+				- data->philo[i].last_meal > data->info.time_to_die + 1)
 			{
 				pthread_mutex_lock(&data->philo[i].m_state);
 				data->philo[i].state = DEAD;
@@ -60,35 +60,29 @@ void	*timer(void *ptr)
 
 void	uber_fork(t_philo *philo, pthread_mutex_t *a, pthread_mutex_t *b, int f)
 {
-	if (!f)
-		pthread_mutex_lock(a);
-	else
-		pthread_mutex_unlock(a);
-	if (a != b && !f)
-		pthread_mutex_lock(b);
-	else if (a != b)
-		pthread_mutex_unlock(b);
-	if (f)
+	if (f && (!pthread_mutex_unlock(a) && (a != b && !pthread_mutex_unlock(b))))
 		return ;
-	if (!nostop(philo) && (!pthread_mutex_unlock(a)
-			|| (a != b && !pthread_mutex_unlock(b))))
+	pthread_mutex_lock(a);
+	if (!nostop(philo) && !pthread_mutex_unlock(a))
 		return ;
 	pthread_mutex_lock(&philo->info->write);
-	printf("%llu %d has taken a fork\n",
+	printf("%llu philo %d has taken a fork\n",
 		get_time() - philo->info->start_time, philo->id + 1);
 	pthread_mutex_unlock(&philo->info->write);
-	if ((a == b || !nostop(philo)) && (!pthread_mutex_unlock(a) || (a != b
-				&& !pthread_mutex_unlock(b))))
+	if (a != b)
+		pthread_mutex_lock(b);
+	if ((a == b && !pthread_mutex_unlock(a)) || (!nostop(philo)
+			&& !pthread_mutex_unlock(a) && !pthread_mutex_unlock(b)))
 		return ;
 	pthread_mutex_lock(&philo->info->write);
-	printf("%llu %d has taken a fork\n",
+	printf("%llu philo %d has taken a fork\n",
 		get_time() - philo->info->start_time, philo->id + 1);
 	pthread_mutex_unlock(&philo->info->write);
 }
 
 void	uber_eat(t_philo *philo)
 {
-	if (philo->id % 2 == 0)
+	if (philo->id % 2 == 1)
 		uber_fork(philo, philo->left, philo->right, 0);
 	else
 		uber_fork(philo, philo->right, philo->left, 0);
@@ -97,7 +91,7 @@ void	uber_eat(t_philo *philo)
 	pthread_mutex_lock(&philo->m_state);
 	philo->state = EATING;
 	pthread_mutex_unlock(&philo->m_state);
-	if (!nostop(philo) && (!pthread_mutex_unlock(philo->left) || (philo->right
+	if (!nostop(philo) && (!pthread_mutex_unlock(philo->left) && (philo->right
 				!= philo->left && !pthread_mutex_unlock(philo->right))))
 		return ;
 	pthread_mutex_lock(&philo->last);
@@ -105,7 +99,7 @@ void	uber_eat(t_philo *philo)
 	pthread_mutex_unlock(&philo->last);
 	protected_print(philo);
 	usleep(philo->info->time_to_eat * 1000);
-	if (philo->id % 2 == 0)
+	if (philo->id % 2 == 1)
 		uber_fork(philo, philo->left, philo->right, 1);
 	else
 		uber_fork(philo, philo->right, philo->left, 1);
@@ -119,6 +113,8 @@ void	*set_philo(void *ptr)
 	t_philo	*philo;
 
 	philo = (t_philo *)ptr;
+	//if (philo->id % 2 == 1)
+	//	usleep(1000);
 	while (nostop(philo))
 	{
 		uber_eat(philo);

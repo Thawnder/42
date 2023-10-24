@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 16:43:05 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/10/23 16:21:56 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/10/24 11:15:03 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,20 +25,20 @@ void	protected_print(t_philo *philo)
 	pthread_mutex_lock(&philo->m_state);
 	pthread_mutex_lock(&philo->info->write);
 	if (philo->state == EATING)
-		printf("%llu %d is eating\n",
+		printf("%llu philo %d is eating\n",
 			get_time() - philo->info->start_time, philo->id + 1);
 	else if (philo->state == SLEEPING)
-		printf("%llu %d is sleeping\n",
+		printf("%llu philo %d is sleeping\n",
 			get_time() - philo->info->start_time, philo->id + 1);
 	else if (philo->state == THINKING)
-		printf("%llu %d is thinking\n",
+		printf("%llu philo %d is thinking\n",
 			get_time() - philo->info->start_time, philo->id + 1);
 	else if (philo->state == DEAD && !philo->info->dead)
 	{
 		pthread_mutex_lock(&philo->info->die);
 		philo->info->dead += 1;
 		pthread_mutex_unlock(&philo->info->die);
-		printf("%llu %d is dead\n",
+		printf("%llu philo %d is dead\n",
 			get_time() - philo->info->start_time, philo->id + 1);
 	}
 	pthread_mutex_unlock(&philo->m_state);
