@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:33:21 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/10/24 15:54:19 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/10/25 10:12:11 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ typedef unsigned long long int	t_alltime;
 
 typedef struct s_info
 {
-	int				gang_size;
+	int				gang_len;
 	int				max_meals;
 	int				dead;
 	int				finished;
@@ -38,7 +38,7 @@ typedef struct s_info
 	t_alltime		time_to_eat;
 	t_alltime		time_to_sleep;
 	t_alltime		start_time;
-	pthread_mutex_t end;
+	pthread_mutex_t	end;
 	pthread_mutex_t	start;
 	pthread_mutex_t	write;
 	pthread_mutex_t	die;

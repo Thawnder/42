@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:50:07 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/10/24 16:12:25 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/10/25 10:33:31 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	nostop(t_philo *philo)
 		0);
 }
 
-void	*timer(void *ptr) // Norme a regler
+void	*timer(void *ptr)
 {
 	t_data	*d;
 	int		i;
@@ -39,14 +39,13 @@ void	*timer(void *ptr) // Norme a regler
 	d = (t_data *)ptr;
 	pthread_mutex_lock(&d->info.start);
 	pthread_mutex_unlock(&d->info.start);
-	pthread_mutex_lock(&d->info.end);
-	while (d->info.finished < d->info.gang_size)
+	while (!pthread_mutex_lock(&d->info.end)
+		&& d->info.finished < d->info.gang_len)
 	{
 		pthread_mutex_unlock(&d->info.end);
 		i = -1;
-		while (++i < d->info.gang_size)
+		while (++i < d->info.gang_len && !pthread_mutex_lock(&d->philo[i].last))
 		{
-			pthread_mutex_lock(&d->philo[i].last);
 			if (nostop(&d->philo[i]) && get_time()
 				- d->philo[i].last_meal > d->info.time_to_die + 1)
 				return (pthread_mutex_lock(&d->philo[i].m_state),
@@ -54,11 +53,10 @@ void	*timer(void *ptr) // Norme a regler
 					pthread_mutex_unlock(&d->philo[i].m_state),
 					protected_print(&d->philo[i]),
 					pthread_mutex_unlock(&d->philo[i].last), (void *)0);
-			pthread_mutex_unlock(&data->philo[i].last);
+			pthread_mutex_unlock(&d->philo[i].last);
 		}
-		pthread_mutex_lock(&philo->info->end);
 	}
-	pthread_mutex_unlock(&philo->info->end);
+	pthread_mutex_unlock(&d->info.end);
 	return ((void *)0);
 }
 
@@ -117,8 +115,6 @@ void	*set_philo(void *ptr)
 	t_philo	*philo;
 
 	philo = (t_philo *)ptr;
-	//if (philo->id % 2 == 1)
-	//	usleep(1000);
 	while (nostop(philo))
 	{
 		uber_eat(philo);
@@ -136,8 +132,5 @@ void	*set_philo(void *ptr)
 		pthread_mutex_unlock(&philo->m_state);
 		protected_print(philo);
 	}
-	pthread_mutex_lock(&philo->info->write);
-	printf("%d leaves\n", philo->id + 1);
-	pthread_mutex_unlock(&philo->info->write);
 	return ((void *)0);
 }

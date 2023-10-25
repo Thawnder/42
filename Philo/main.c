@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 11:06:13 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/10/24 15:55:00 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/10/25 10:32:56 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,8 @@ void	init_all(t_data *data, char **argv, int i)
 	data->info.time_to_sleep = ft_atoll(argv[4]);
 	pthread_mutex_init(&data->info.die, NULL);
 	pthread_mutex_init(&data->info.start, NULL);
-	data->philo = ft_calloc(data->info.gang_size, sizeof(t_philo));
-	while (++i < data->info.gang_size)
+	data->philo = ft_calloc(data->info.gang_len, sizeof(t_philo));
+	while (++i < data->info.gang_len)
 	{
 		data->philo[i].info = &data->info;
 		data->philo[i].id = i;
@@ -79,10 +79,10 @@ void	init_all(t_data *data, char **argv, int i)
 		pthread_mutex_init(&data->info.forks[i], NULL);
 	}
 	i = -1;
-	while (++i < data->info.gang_size)
+	while (++i < data->info.gang_len)
 	{
 		if (i == 0)
-			data->philo[i].left = &data->info.forks[data->info.gang_size - 1];
+			data->philo[i].left = &data->info.forks[data->info.gang_len - 1];
 		else
 			data->philo[i].left = &data->info.forks[i - 1];
 		data->philo[i].right = &data->info.forks[i];
@@ -96,11 +96,11 @@ void	free_all(t_data *data)
 
 	i = -1;
 	pthread_mutex_unlock(&data->info.start);
-	while (++i < data->info.gang_size)
+	while (++i < data->info.gang_len)
 		pthread_join(data->philo[i].tid, NULL);
 	pthread_join(data->timer_tid, NULL);
 	i = -1;
-	while (++i < data->info.gang_size)
+	while (++i < data->info.gang_len)
 	{
 		pthread_mutex_destroy(&data->philo[i].info->forks[i]);
 		pthread_mutex_destroy(&data->philo[i].m_state);
@@ -109,7 +109,7 @@ void	free_all(t_data *data)
 	}
 	pthread_mutex_destroy(&data->info.write);
 	pthread_mutex_destroy(&data->info.start);
-	pthread_mutex_destroy(&data.info.end);
+	pthread_mutex_destroy(&data->info.end);
 	pthread_mutex_destroy(&data->info.die);
 	free(data->info.forks);
 	free(data->philo);
@@ -120,25 +120,26 @@ int	main(int argc, char **argv)
 	t_data	data;
 	int		i;
 
-	if (argc < 5 || argc > 6)
-		return (printf("Invalid number of args\n"), -1);
+	if (argc < 5 || argc > 6 || argv[1][0] == '-' || argv[2][0] == '-'
+		|| argv[3][0] == '-' || argv[4][0] == '-')
+		return (printf("Invalid args\n"), -1);
 	data.info.dead = 0;
 	data.info.finished = 0;
 	data.info.max_meals = -1;
-	data.info.gang_size = (int) ft_atoll(argv[1]);
-	data.info.forks = ft_calloc(data.info.gang_size, sizeof(pthread_mutex_t));
+	data.info.gang_len = (int) ft_atoll(argv[1]);
+	data.info.forks = ft_calloc(data.info.gang_len, sizeof(pthread_mutex_t));
 	if (argc == 6)
 		data.info.max_meals = (int) ft_atoll(argv[5]);
 	i = -1;
 	pthread_mutex_init(&data.info.write, NULL);
 	pthread_mutex_init(&data.info.end, NULL);
 	init_all(&data, argv, i);
-	while (++i < data.info.gang_size)
+	while (++i < data.info.gang_len)
 		data.philo[i].last_meal = get_time();
 	pthread_mutex_lock(&data.info.start);
 	pthread_create(&data.timer_tid, NULL, &timer, &data);
 	i = -1;
-	while (++i < data.info.gang_size)
+	while (++i < data.info.gang_len)
 		pthread_create(&data.philo[i].tid, NULL, &set_philo, &data.philo[i]);
 	return (free_all(&data), 0);
 }
