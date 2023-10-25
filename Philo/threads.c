@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:50:07 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/10/25 10:33:31 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/10/25 17:27:17 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,8 @@ void	*set_philo(void *ptr)
 	t_philo	*philo;
 
 	philo = (t_philo *)ptr;
+	pthread_mutex_lock(&philo->info->start);
+	pthread_mutex_unlock(&philo->info->start);
 	while (nostop(philo))
 	{
 		uber_eat(philo);
