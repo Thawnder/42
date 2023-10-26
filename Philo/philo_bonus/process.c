@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:50:07 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/10/25 18:16:51 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/10/26 15:11:31 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,29 +84,32 @@ void	*death(void *ptr)
 	return ((void *)0);
 }
 
-void	set_philo(t_philo *philo)
+void	*set_philo(t_philo *p)
 {
-	sem_wait(philo->info->start);
-	sem_post(philo->info->start);
-	if (philo->id % 2 == 1)
+	pthread_create(&p->timer, NULL, &timer, p);
+	sem_wait(p->info->start);
+	sem_post(p->info->start);
+	if (p->id % 2 == 1)
 		usleep(1000);
-	pthread_create(&philo->test_death, NULL, &death, philo);
-	while (nostop(philo))
+	pthread_create(&p->test_death, NULL, &death, p);
+	while (nostop(p))
 	{
-		uber_eat(philo);
-		if (philo->info->gang_len == 1 || !nostop(philo))
-			return ;
-		sem_wait(philo->info->s_state);
-		philo->state = SLEEPING;
-		sem_post(philo->info->s_state);
-		protected_print(philo);
-		usleep(philo->info->time_to_sleep * 1000);
-		if (!nostop(philo))
-			return ;
-		sem_wait(philo->info->s_state);
-		philo->state = THINKING;
-		sem_post(philo->info->s_state);
-		protected_print(philo);
+		uber_eat(p);
+		if (p->info->gang_len == 1 || !nostop(p))
+			break ;
+		sem_wait(p->info->s_state);
+		p->state = SLEEPING;
+		sem_post(p->info->s_state);
+		protected_print(p);
+		usleep(p->info->time_to_sleep * 1000);
+		if (!nostop(p))
+			break ;
+		sem_wait(p->info->s_state);
+		p->state = THINKING;
+		sem_post(p->info->s_state);
+		protected_print(p);
 	}
-	return ;
+	printf("%d leaves\n", p->id + 1);
+	return (sem_post(p->info->is_done), pthread_join(p->test_death, NULL),
+		pthread_join(p->timer, NULL), free(p), exit(EXIT_FAILURE), (void *)0);
 }
