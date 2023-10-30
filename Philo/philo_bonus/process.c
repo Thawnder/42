@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:50:07 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/10/26 15:11:31 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/10/30 15:08:38 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,9 +84,10 @@ void	*death(void *ptr)
 	return ((void *)0);
 }
 
-void	*set_philo(t_philo *p)
+void	*set_philo(t_philo *p, t_data *d)
 {
 	pthread_create(&p->timer, NULL, &timer, p);
+	pthread_detach(p->timer);
 	sem_wait(p->info->start);
 	sem_post(p->info->start);
 	if (p->id % 2 == 1)
@@ -109,7 +110,6 @@ void	*set_philo(t_philo *p)
 		sem_post(p->info->s_state);
 		protected_print(p);
 	}
-	printf("%d leaves\n", p->id + 1);
-	return (sem_post(p->info->is_done), pthread_join(p->test_death, NULL),
-		pthread_join(p->timer, NULL), free(p), exit(EXIT_FAILURE), (void *)0);
+	pthread_join(p->test_death, NULL);
+	return (sem_post(p->info->is_done), free_all(d), exit(EXIT_FAILURE), (void *)0);
 }

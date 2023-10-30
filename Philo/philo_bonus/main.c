@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 11:06:13 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/10/26 14:52:29 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/10/30 11:54:52 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,25 +90,14 @@ void	*init_all(t_data *data, char **argv, int i)
 	return (data->info.start_time = get_time(), (void *)0);
 }
 
-void	free_all(t_data *data)
+void	end(t_data *data)
 {
 	int	i;
 
 	i = -1;
-	sem_post(data->info.start);
 	while (++i < data->info.gang_len)
 		sem_wait(data->info.is_done);
-	sem_close(data->info.forks);
-	sem_close(data->info.write);
-	sem_close(data->info.start);
-	sem_close(data->info.end);
-	sem_close(data->info.die);
-	sem_close(data->info.is_done);
-	sem_close(data->info.is_dead);
-	sem_close(data->info.s_state);
-	sem_close(data->info.meal);
-	sem_close(data->info.last);
-	free(data->philo);
+	free_all(data);
 }
 
 int	main(int argc, char **argv)
@@ -135,7 +124,7 @@ int	main(int argc, char **argv)
 	{
 		data.philo[i].pid = fork();
 		if (data.philo[i].pid == 0)
-			set_philo(&data.philo[i]);
+			set_philo(&data.philo[i], &data);
 	}
-	return (free_all(&data), 0);
+	return (sem_post(data.info.start), end(&data), 0);
 }

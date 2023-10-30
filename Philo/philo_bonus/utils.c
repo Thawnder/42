@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 16:43:05 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/10/26 15:14:00 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/10/30 11:24:19 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,19 @@ void	*timer(void *ptr) // loop toujours...
 	}
 	sem_post(p->info->end);
 	return ((void *)0);
+}
+
+void	free_all(t_data *data)
+{
+	sem_close(data->info.forks);
+	sem_close(data->info.write);
+	sem_close(data->info.start);
+	sem_close(data->info.end);
+	sem_close(data->info.die);
+	sem_close(data->info.is_done);
+	sem_close(data->info.is_dead);
+	sem_close(data->info.s_state);
+	sem_close(data->info.meal);
+	sem_close(data->info.last);
+	free(data->philo);
 }
