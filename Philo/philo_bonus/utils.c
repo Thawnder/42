@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 16:43:05 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/10/31 12:32:09 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/10/31 17:16:53 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,8 @@ void	init_sem(t_data *d)
 	sem_post(d->info.end);
 	d->info.die = sem_open("die", O_CREAT | O_EXCL, 0644, 0);
 	sem_post(d->info.die);
-	d->info.is_done = sem_open("is_done", O_CREAT | O_EXCL, 0644, 0);
-	sem_post(d->info.is_done);
+	d->info.is_done = sem_open("is_done", O_CREAT, 0644, 0);
+	//sem_post(d->info.is_done);
 	d->info.is_dead = sem_open("is_dead", O_CREAT | O_EXCL, 0644, 0);
 	sem_post(d->info.is_dead);
 	d->info.last = sem_open("last", O_CREAT | O_EXCL, 0644, 0);
