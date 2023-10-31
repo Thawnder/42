@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:33:21 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/10/30 11:26:31 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/10/31 12:15:23 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,11 +74,12 @@ typedef struct s_data
 	t_philo		*philo;
 }		t_data;
 
-int			nostop(t_philo *philo);	
+int			nostop(t_philo *philo);
+void		init_sem(t_data *d);
 void		*set_philo(t_philo *philo, t_data *d);
 void		*timer(void *ptr);
 t_alltime	get_time(void);
-void		protected_print(t_philo *philo);
+void		protected_print(t_philo *philo, int state);
 void		free_all(t_data *data);
 
 #endif

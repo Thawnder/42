@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:50:07 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/10/30 15:08:38 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/10/31 12:25:47 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	uber_fork(t_philo *philo, sem_t *s, int f)
 	if (f && (!sem_post(s) && (philo->info->gang_len > 1 && !sem_post(s))))
 		return ;
 	sem_wait(s);
-	if (!nostop(philo) && sem_post(s))
+	if (!nostop(philo) && !sem_post(s))
 		return ;
 	sem_wait(philo->info->write);
 	printf("%llu philo %d has taken a fork\n",
@@ -52,18 +52,15 @@ void	uber_fork(t_philo *philo, sem_t *s, int f)
 void	uber_eat(t_philo *philo)
 {
 	uber_fork(philo, philo->info->forks, 0);
-	if (philo->info->gang_len == 1 || !nostop(philo))
-		return ;
-	sem_wait(philo->info->s_state);
-	philo->state = EATING;
-	sem_post(philo->info->s_state);
-	if (!nostop(philo) && (!sem_post(philo->info->forks)
-			&& (philo->info->gang_len > 1 && !sem_post(philo->info->forks))))
+	if (philo->info->gang_len == 1 || (!nostop(philo)
+			&& (!sem_post(philo->info->forks)
+				&& (philo->info->gang_len > 1
+					&& !sem_post(philo->info->forks)))))
 		return ;
 	sem_wait(philo->info->last);
 	philo->last_meal = get_time();
 	sem_post(philo->info->last);
-	protected_print(philo);
+	protected_print(philo, EATING);
 	usleep(philo->info->time_to_eat * 1000);
 	uber_fork(philo, philo->info->forks, 1);
 	sem_wait(philo->info->meal);
@@ -91,25 +88,19 @@ void	*set_philo(t_philo *p, t_data *d)
 	sem_wait(p->info->start);
 	sem_post(p->info->start);
 	if (p->id % 2 == 1)
-		usleep(1000);
+		usleep(p->info->time_to_eat * 1000);
 	pthread_create(&p->test_death, NULL, &death, p);
 	while (nostop(p))
 	{
 		uber_eat(p);
 		if (p->info->gang_len == 1 || !nostop(p))
 			break ;
-		sem_wait(p->info->s_state);
-		p->state = SLEEPING;
-		sem_post(p->info->s_state);
-		protected_print(p);
+		protected_print(p, SLEEPING);
 		usleep(p->info->time_to_sleep * 1000);
 		if (!nostop(p))
 			break ;
-		sem_wait(p->info->s_state);
-		p->state = THINKING;
-		sem_post(p->info->s_state);
-		protected_print(p);
+		protected_print(p, THINKING);
 	}
-	pthread_join(p->test_death, NULL);
-	return (sem_post(p->info->is_done), free_all(d), exit(EXIT_FAILURE), (void *)0);
+	return (pthread_join(p->test_death, NULL), sem_post(p->info->is_done),
+		free(d->philo), exit(EXIT_FAILURE), (void *)0);
 }
