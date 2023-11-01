@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 16:43:05 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/10/31 17:16:53 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/11/01 17:30:44 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	*timer(void *ptr)
 	sem_wait(p->info->start);
 	sem_post(p->info->start);
 	while (!sem_wait(p->info->is_dead) && !p->is_dead && !sem_wait(p->info->end)
-		&& p->info->finished < p->info->gang_len)
+		&& !p->info->finished)
 	{
 		sem_post(p->info->is_dead);
 		sem_post(p->info->end);
@@ -63,6 +63,8 @@ void	*timer(void *ptr)
 				sem_post(p->info->forks), (void *)0);
 		sem_post(p->info->last);
 	}
+	if (p->info->finished)
+		sem_post(p->info->die);
 	sem_post(p->info->is_dead);
 	sem_post(p->info->end);
 	return ((void *)0);
@@ -80,8 +82,8 @@ void	init_sem(t_data *d)
 	sem_post(d->info.end);
 	d->info.die = sem_open("die", O_CREAT | O_EXCL, 0644, 0);
 	sem_post(d->info.die);
-	d->info.is_done = sem_open("is_done", O_CREAT, 0644, 0);
-	//sem_post(d->info.is_done);
+	d->info.is_done = sem_open("is_done", O_CREAT | O_EXCL, 0644, 0);
+	// sem_post(d->info.is_done);
 	d->info.is_dead = sem_open("is_dead", O_CREAT | O_EXCL, 0644, 0);
 	sem_post(d->info.is_dead);
 	d->info.last = sem_open("last", O_CREAT | O_EXCL, 0644, 0);
