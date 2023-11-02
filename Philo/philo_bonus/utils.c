@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 16:43:05 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/11/02 11:21:26 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/11/02 13:37:49 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,4 +96,11 @@ void	init_sem(t_data *d)
 	sem_post(d->info.s_state);
 	d->info.meal = sem_open("meal", O_CREAT | O_EXCL, 0644, 0);
 	sem_post(d->info.meal);
+}
+
+int	ft_max(int a, int b)
+{
+	if (a > b)
+		return (a);
+	return (b);
 }

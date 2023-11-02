@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:33:21 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/11/02 11:02:25 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/11/02 13:38:00 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,5 +82,6 @@ void		*timer(void *ptr);
 t_alltime	get_time(void);
 void		protected_print(t_philo *philo, int state);
 void		free_all(t_data *data);
+int			ft_max(int a, int b);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:50:07 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/11/02 13:27:00 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/11/02 13:43:14 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void	*set_philo(t_philo *p, t_data *d)
 	sem_wait(p->info->start);
 	sem_post(p->info->start);
 	if (p->id % 2 == 1)
-		usleep(p->info->time_to_eat * 1000);
+		usleep(ft_max(p->info->time_to_eat * 1000, 10000));
 	pthread_create(&p->test_death, NULL, &death, p);
 	while (nostop(p))
 	{
