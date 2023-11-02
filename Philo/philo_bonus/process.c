@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:50:07 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/11/02 13:43:14 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/11/02 17:44:15 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,21 @@
 int	nostop(t_philo *philo)
 {
 	sem_wait(philo->info->is_dead);
-	sem_wait(philo->info->meal);
-	if (!philo->is_dead && (philo->info->max_meals == -1
-			|| philo->meals < philo->info->max_meals))
-		return (sem_post(philo->info->is_dead), sem_post(philo->info->meal), 1);
 	sem_wait(philo->info->end);
-	if (!philo->is_dead && !(philo->info->max_meals == -1
+	sem_wait(philo->info->meal);
+	if (!philo->is_dead && !philo->info->finished
+		&& (philo->info->max_meals == -1
+			|| philo->meals < philo->info->max_meals))
+		return (sem_post(philo->info->end),
+			sem_post(philo->info->is_dead),
+			sem_post(philo->info->meal), 1);
+	if (!philo->is_dead && !philo->info->finished
+		&& !(philo->info->max_meals == -1
 			&& philo->meals < philo->info->max_meals))
 		philo->info->finished += 1;
 	return (sem_post(philo->info->end),
-		sem_post(philo->info->is_dead), sem_post(philo->info->meal), 0);
+		sem_post(philo->info->is_dead),
+		sem_post(philo->info->meal), 0);
 }
 
 void	uber_fork(t_philo *philo, sem_t *s, int f)
@@ -73,16 +78,18 @@ void	*death(void *ptr)
 	t_philo	*philo;
 
 	philo = (t_philo *)ptr;
-	sem_wait(philo->info->die);
-	sem_wait(philo->info->is_dead);
+	//sem_wait(philo->info->die);
 	sem_wait(philo->info->is_done);
-	if (philo->info->finished)
-		philo->is_done = 1;
-	else
-		philo->is_dead = 1;
-	sem_post(philo->info->is_done);
+	while (!sem_wait(philo->info->is_dead) && !philo->is_dead
+		&& !sem_wait(philo->info->end) && !philo->info->finished)
+	{
+		sem_post(philo->info->is_dead);
+		sem_post(philo->info->end);
+	}
 	sem_post(philo->info->is_dead);
-	sem_post(philo->info->die);
+	sem_post(philo->info->end);
+	sem_post(philo->info->is_done);
+	//sem_post(philo->info->die);
 	return ((void *)0);
 }
 
@@ -106,6 +113,7 @@ void	*set_philo(t_philo *p, t_data *d)
 			break ;
 		protected_print(p, THINKING);
 	}
-	return (pthread_join(p->test_death, NULL), sem_post(p->info->is_done),
+	printf("%d leaves\n", p->id + 1);
+	return (pthread_join(p->test_death, NULL), 
 		free(d->philo), exit(EXIT_FAILURE), (void *)0);
 }

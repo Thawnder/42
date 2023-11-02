@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 16:43:05 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/11/02 13:37:49 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/11/02 17:39:42 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,10 @@ void	protected_print(t_philo *philo, int state)
 			get_time() - philo->info->start_time, philo->id + 1);
 	else if (philo->state == DEAD)
 	{
-		sem_post(philo->info->die);
+		sem_wait(philo->info->is_dead);
+		philo->is_dead = 1;
+		sem_post(philo->info->is_dead);
+		sem_post(philo->info->is_done);
 		printf("%llu philo %d is dead\n",
 			get_time() - philo->info->start_time, philo->id + 1);
 		return ;
@@ -52,12 +55,9 @@ void	*timer(void *ptr)
 	p = (t_philo *)ptr;
 	sem_wait(p->info->start);
 	sem_post(p->info->start);
-	while (!sem_wait(p->info->is_dead) && !p->is_dead
-		&& !sem_wait(p->info->is_done) && !p->is_done
+	while (!sem_wait(p->info->is_dead) && !p->is_dead && !sem_post(p->info->is_dead)
 		&& !sem_wait(p->info->end) && !p->info->finished)
 	{
-		sem_post(p->info->is_done);
-		sem_post(p->info->is_dead);
 		sem_post(p->info->end);
 		if (nostop(p) && !sem_wait(p->info->last)
 			&& get_time() - p->last_meal > p->info->time_to_die + 1)
@@ -65,18 +65,17 @@ void	*timer(void *ptr)
 				sem_post(p->info->forks), (void *)0);
 		sem_post(p->info->last);
 	}
-	if (p->info->finished)
-		sem_post(p->info->die);
-	sem_post(p->info->is_done);
 	sem_post(p->info->is_dead);
 	sem_post(p->info->end);
+	//sem_post(p->info->die);
+	sem_post(p->info->is_done);
 	return ((void *)0);
 }
 
 void	init_sem(t_data *d)
 {
 	d->info.forks = sem_open("forks", O_CREAT | O_EXCL,
-			0644, d->info.gang_len - 1);
+			0644, ft_max(0, d->info.gang_len - 1));
 	sem_post(d->info.forks);
 	d->info.write = sem_open("write", O_CREAT | O_EXCL, 0644, 0);
 	sem_post(d->info.write);
@@ -87,7 +86,7 @@ void	init_sem(t_data *d)
 	d->info.die = sem_open("die", O_CREAT | O_EXCL, 0644, 0);
 	sem_post(d->info.die);
 	d->info.is_done = sem_open("is_done", O_CREAT | O_EXCL, 0644, 0);
-	sem_post(d->info.is_done);
+	//sem_post(d->info.is_done);
 	d->info.is_dead = sem_open("is_dead", O_CREAT | O_EXCL, 0644, 0);
 	sem_post(d->info.is_dead);
 	d->info.last = sem_open("last", O_CREAT | O_EXCL, 0644, 0);

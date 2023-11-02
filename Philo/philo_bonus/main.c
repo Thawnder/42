@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 11:06:13 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/11/02 13:26:48 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/11/02 16:42:12 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	*init_all(t_data *d, char **argv, int i)
 	if ((!sem_unlink("forks") && !sem_unlink("write") && !sem_unlink("start")
 			&& !sem_unlink("end") && !sem_unlink("die") && !sem_unlink("last")
 			&& !sem_unlink("state") && !sem_unlink("meal")
-			&& !sem_unlink("is_done") && !sem_unlink("is_dead")) || 1)
+			&& !sem_unlink("is_dead") && !sem_unlink("is_done")) || 1)
 		d->info.gang_len = (int) ft_atoll(argv[1]);
 	d->info.time_to_die = ft_atoll(argv[2]);
 	d->info.time_to_eat = ft_atoll(argv[3]);
@@ -94,6 +94,19 @@ void	end(t_data *data)
 			i++;
 	}
 	usleep(1000);
+	if (data->info.gang_len == 0)
+	{
+		sem_close(data->info.write);
+		sem_close(data->info.start);
+		sem_close(data->info.end);
+		sem_close(data->info.die);
+		sem_close(data->info.is_done);
+		sem_close(data->info.is_dead);
+		sem_close(data->info.last);
+		sem_close(data->info.s_state);
+		sem_close(data->info.meal);
+		sem_close(data->info.forks);
+	}
 	free(data->philo);
 }
 
