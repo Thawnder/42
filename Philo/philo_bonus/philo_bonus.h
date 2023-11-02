@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:33:21 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/10/31 12:15:23 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/11/02 11:02:25 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ typedef struct s_philo
 	t_alltime		last_meal;
 	int				state;
 	int				is_dead;
+	int				is_done;
 	int				meals;
 	pthread_t		test_death;
 	pthread_t		timer;

@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 11:06:13 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/11/01 17:30:40 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/11/02 13:26:48 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,11 +83,16 @@ void	*init_all(t_data *d, char **argv, int i)
 
 void	end(t_data *data)
 {
-	int	i;
+	int		i;
+	pid_t	pid;
 
-	i = -1;
-	while (++i < data->info.gang_len)
-		sem_wait(data->info.is_done);
+	i = 0;
+	while (i < data->info.gang_len)
+	{
+		pid = waitpid(-1, NULL, 0);
+		if (pid > 0)
+			i++;
+	}
 	usleep(1000);
 	free(data->philo);
 }

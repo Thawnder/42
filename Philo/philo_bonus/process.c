@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:50:07 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/11/01 17:22:08 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/11/02 13:27:00 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,12 @@ void	*death(void *ptr)
 	philo = (t_philo *)ptr;
 	sem_wait(philo->info->die);
 	sem_wait(philo->info->is_dead);
-	philo->is_dead = 1;
+	sem_wait(philo->info->is_done);
+	if (philo->info->finished)
+		philo->is_done = 1;
+	else
+		philo->is_dead = 1;
+	sem_post(philo->info->is_done);
 	sem_post(philo->info->is_dead);
 	sem_post(philo->info->die);
 	return ((void *)0);
