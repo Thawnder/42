@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 16:43:05 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/11/02 17:39:42 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/11/06 17:01:21 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	protected_print(t_philo *philo, int state)
 		sem_wait(philo->info->is_dead);
 		philo->is_dead = 1;
 		sem_post(philo->info->is_dead);
-		sem_post(philo->info->is_done);
+		sem_post(philo->info->die);
 		printf("%llu philo %d is dead\n",
 			get_time() - philo->info->start_time, philo->id + 1);
 		return ;
@@ -67,7 +67,7 @@ void	*timer(void *ptr)
 	}
 	sem_post(p->info->is_dead);
 	sem_post(p->info->end);
-	//sem_post(p->info->die);
+	sem_post(p->info->die);
 	sem_post(p->info->is_done);
 	return ((void *)0);
 }

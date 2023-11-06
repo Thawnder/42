@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:50:07 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/11/02 17:44:15 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/11/06 17:14:59 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,18 +78,26 @@ void	*death(void *ptr)
 	t_philo	*philo;
 
 	philo = (t_philo *)ptr;
-	//sem_wait(philo->info->die);
-	sem_wait(philo->info->is_done);
-	while (!sem_wait(philo->info->is_dead) && !philo->is_dead
-		&& !sem_wait(philo->info->end) && !philo->info->finished)
+
+	sem_wait(philo->info->die);
+	sem_post(philo->info->die);
+
+	if (!philo->info->is_dead)
 	{
-		sem_post(philo->info->is_dead);
-		sem_post(philo->info->end);
+		sem_wait(philo->info->is_done);
+		while (!sem_wait(philo->info->is_dead) && !philo->is_dead
+			&& !sem_wait(philo->info->end) && !philo->info->finished)
+		{
+			sem_post(philo->info->is_dead);
+			sem_post(philo->info->end);
+		}
 	}
 	sem_post(philo->info->is_dead);
 	sem_post(philo->info->end);
-	sem_post(philo->info->is_done);
-	//sem_post(philo->info->die);
+	if (philo->info->is_dead)
+		sem_post(philo->info->die);
+	else
+		sem_post(philo->info->is_done);
 	return ((void *)0);
 }
 

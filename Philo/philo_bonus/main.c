@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 11:06:13 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/11/02 16:42:12 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/11/06 16:59:34 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,8 @@ void	end(t_data *data)
 		if (pid > 0)
 			i++;
 	}
+	sem_post(data->info.die);
+	sem_post(data->info.is_done);
 	usleep(1000);
 	if (data->info.gang_len == 0)
 	{
