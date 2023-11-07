@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 11:06:13 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/11/06 16:59:34 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/11/07 11:24:16 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ void	*init_all(t_data *d, char **argv, int i)
 		d->philo[i].info = &d->info;
 		d->philo[i].id = i;
 	}
+	pthread_create(&d->info.all_done, NULL, &all_done, d);
+	pthread_detach(d->info.all_done);
 	return (d->info.start_time = get_time(), (void *)0);
 }
 
@@ -93,8 +95,6 @@ void	end(t_data *data)
 		if (pid > 0)
 			i++;
 	}
-	sem_post(data->info.die);
-	sem_post(data->info.is_done);
 	usleep(1000);
 	if (data->info.gang_len == 0)
 	{

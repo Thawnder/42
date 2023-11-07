@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:50:07 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/11/06 17:35:03 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/11/07 17:05:03 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,9 @@ void	uber_fork(t_philo *philo, sem_t *s, int f)
 	if (!nostop(philo) && !sem_post(s))
 		return ;
 	sem_wait(philo->info->write);
-	printf("%llu philo %d has taken a fork\n",
-		get_time() - philo->info->start_time, philo->id + 1);
+	if (!philo->is_dead)
+		printf("%llu philo %d has taken a fork\n",
+			get_time() - philo->info->start_time, philo->id + 1);
 	sem_post(philo->info->write);
 	if (philo->info->gang_len > 1)
 		sem_wait(s);
@@ -49,8 +50,9 @@ void	uber_fork(t_philo *philo, sem_t *s, int f)
 			&& !sem_post(s) && !sem_post(s)))
 		return ;
 	sem_wait(philo->info->write);
-	printf("%llu philo %d has taken a fork\n",
-		get_time() - philo->info->start_time, philo->id + 1);
+	if (!philo->is_dead)
+		printf("%llu philo %d has taken a fork\n",
+			get_time() - philo->info->start_time, philo->id + 1);
 	sem_post(philo->info->write);
 }
 
@@ -78,26 +80,11 @@ void	*death(void *ptr)
 	t_philo	*philo;
 
 	philo = (t_philo *)ptr;
-
 	sem_wait(philo->info->die);
-	sem_post(philo->info->die);
-
-	if (!philo->info->is_dead)
-	{
-		sem_wait(philo->info->is_done);
-		while (!sem_wait(philo->info->is_dead) && !philo->is_dead
-			&& !sem_wait(philo->info->end) && !philo->info->finished)
-		{
-			sem_post(philo->info->is_dead);
-			sem_post(philo->info->end);
-		}
-	}
+	sem_wait(philo->info->is_dead);
+	philo->is_dead = 1;
 	sem_post(philo->info->is_dead);
-	sem_post(philo->info->end);
-	if (philo->info->is_dead)
-		sem_post(philo->info->die);
-	else
-		sem_post(philo->info->is_done);
+	sem_post(philo->info->die);
 	return ((void *)0);
 }
 
@@ -124,6 +111,8 @@ void	*set_philo(t_philo *p, t_data *d)
 		protected_print(p, THINKING);
 	}
 	printf("%d leaves\n", p->id + 1);
-	return (pthread_join(p->test_death, NULL), 
+	if (p->info->gang_len > 1)
+		sem_post(p->info->is_done);
+	return (pthread_join(p->test_death, NULL),
 		free(d->philo), exit(EXIT_FAILURE), (void *)0);
 }

@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:33:21 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/11/02 15:36:38 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/11/06 18:16:02 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct s_info
 	sem_t			*last;
 	sem_t			*meal;
 	sem_t			*s_state;
+	pthread_t		all_done;
 }		t_info;
 
 typedef struct s_philo
@@ -82,6 +83,6 @@ void		*timer(void *ptr);
 t_alltime	get_time(void);
 void		protected_print(t_philo *philo, int state);
 void		free_all(t_data *data);
-int			ft_max(int a, int b);
+void		*all_done(void *ptr);
 
 #endif
