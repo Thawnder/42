@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 16:43:05 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/11/08 17:14:31 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/11/08 18:41:40 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_alltime	get_time(void)
 
 void	protected_print(t_philo *philo, int state)
 {
-	sem_wait(philo->info->s_state);
+	sem_wait(philo->info->s_state); // C'EST LUI LA
 	philo->state = state;
 	sem_wait(philo->info->write);
 	if (philo->state == EATING)
@@ -36,19 +36,18 @@ void	protected_print(t_philo *philo, int state)
 			get_time() - philo->info->start_time, philo->id + 1);
 	else if (philo->state == DEAD)
 	{
+		sem_post(philo->info->s_state);
 		sem_wait(philo->info->is_dead);
-		if (!philo->is_dead)
-			printf("%llu philo %d is dead\n",
-				get_time() - philo->info->start_time, philo->id + 1);
 		philo->is_dead = 1;
 		sem_post(philo->info->is_dead);
 		sem_post(philo->info->die);
-		usleep(50000);
+		sem_wait(philo->info->s_state);
+		printf("%llu philo %d is dead\n",
+			get_time() - philo->info->start_time, philo->id + 1);
 		sem_post(philo->info->forks);
 		sem_post(philo->info->forks);
 	}
-	if (philo->state != DEAD)
-		sem_post(philo->info->write);
+	sem_post(philo->info->write);
 	sem_post(philo->info->s_state);
 }
 
