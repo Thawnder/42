@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 16:43:05 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/11/07 17:04:43 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/11/08 17:14:31 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,15 @@ void	protected_print(t_philo *philo, int state)
 		if (!philo->is_dead)
 			printf("%llu philo %d is dead\n",
 				get_time() - philo->info->start_time, philo->id + 1);
-		sem_post(philo->info->is_dead);
 		philo->is_dead = 1;
+		sem_post(philo->info->is_dead);
 		sem_post(philo->info->die);
-		usleep(philo->info->time_to_die * 1000);
+		usleep(50000);
+		sem_post(philo->info->forks);
+		sem_post(philo->info->forks);
 	}
-	sem_post(philo->info->write);
+	if (philo->state != DEAD)
+		sem_post(philo->info->write);
 	sem_post(philo->info->s_state);
 }
 
@@ -61,11 +64,10 @@ void	*timer(void *ptr)
 		&& !sem_wait(p->info->end) && !p->info->finished)
 	{
 		sem_post(p->info->end);
-		usleep(100);
 		if (nostop(p) && !sem_wait(p->info->last)
 			&& get_time() - p->last_meal > p->info->time_to_die + 1)
 			return (sem_post(p->info->last), protected_print(p, DEAD),
-				sem_post(p->info->forks), (void *)0);
+				(void *)0);
 		sem_post(p->info->last);
 	}
 	sem_post(p->info->is_dead);

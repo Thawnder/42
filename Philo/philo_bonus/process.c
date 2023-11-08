@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:50:07 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/11/07 17:05:03 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/11/08 17:07:38 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int	nostop(t_philo *philo)
 {
-	sem_wait(philo->info->is_dead);
 	sem_wait(philo->info->end);
+	sem_wait(philo->info->is_dead);
 	sem_wait(philo->info->meal);
 	if (!philo->is_dead && !philo->info->finished
 		&& (philo->info->max_meals == -1
@@ -40,7 +40,7 @@ void	uber_fork(t_philo *philo, sem_t *s, int f)
 	if (!nostop(philo) && !sem_post(s))
 		return ;
 	sem_wait(philo->info->write);
-	if (!philo->is_dead)
+	if (nostop(philo))
 		printf("%llu philo %d has taken a fork\n",
 			get_time() - philo->info->start_time, philo->id + 1);
 	sem_post(philo->info->write);
@@ -50,7 +50,7 @@ void	uber_fork(t_philo *philo, sem_t *s, int f)
 			&& !sem_post(s) && !sem_post(s)))
 		return ;
 	sem_wait(philo->info->write);
-	if (!philo->is_dead)
+	if (nostop(philo))
 		printf("%llu philo %d has taken a fork\n",
 			get_time() - philo->info->start_time, philo->id + 1);
 	sem_post(philo->info->write);
@@ -110,9 +110,10 @@ void	*set_philo(t_philo *p, t_data *d)
 			break ;
 		protected_print(p, THINKING);
 	}
+	usleep(p->info->time_to_die * 1000);
 	printf("%d leaves\n", p->id + 1);
 	if (p->info->gang_len > 1)
 		sem_post(p->info->is_done);
 	return (pthread_join(p->test_death, NULL),
-		free(d->philo), exit(EXIT_FAILURE), (void *)0);
+		free_all(d), exit(EXIT_FAILURE), (void *)0);
 }

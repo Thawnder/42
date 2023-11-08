@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 11:06:13 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/11/07 11:24:16 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/11/08 17:10:16 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ t_alltime	ft_atoll(char *nptr)
 		res = res * 10 + nptr[i] - 48;
 		i++;
 	}
+	if (res > INT_MAX)
+		return (0);
 	return ((int)res * sign);
 }
 
@@ -78,8 +80,11 @@ void	*init_all(t_data *d, char **argv, int i)
 		d->philo[i].info = &d->info;
 		d->philo[i].id = i;
 	}
-	pthread_create(&d->info.all_done, NULL, &all_done, d);
-	pthread_detach(d->info.all_done);
+	if (d->info.gang_len > 1)
+	{
+		pthread_create(&d->info.all_done, NULL, &all_done, d);
+		pthread_detach(d->info.all_done);
+	}
 	return (d->info.start_time = get_time(), (void *)0);
 }
 
@@ -96,20 +101,7 @@ void	end(t_data *data)
 			i++;
 	}
 	usleep(1000);
-	if (data->info.gang_len == 0)
-	{
-		sem_close(data->info.write);
-		sem_close(data->info.start);
-		sem_close(data->info.end);
-		sem_close(data->info.die);
-		sem_close(data->info.is_done);
-		sem_close(data->info.is_dead);
-		sem_close(data->info.last);
-		sem_close(data->info.s_state);
-		sem_close(data->info.meal);
-		sem_close(data->info.forks);
-	}
-	free(data->philo);
+	free_all(data);
 }
 
 int	main(int argc, char **argv)

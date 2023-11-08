@@ -1,7 +1,7 @@
 MAKEFLAGS += --silent
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -g
-SRCS = main.c process.c utils.c
+SRCS = main.c process.c utils.c free.c
 OBJS_EXEC = ${SRCS:.c=.o}
 EXEC = philo_bonus
 
