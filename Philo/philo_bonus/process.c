@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:50:07 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/11/08 18:32:02 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/11/09 16:24:19 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,9 +110,9 @@ void	*set_philo(t_philo *p, t_data *d)
 			break ;
 		protected_print(p, THINKING);
 	}
-	usleep(p->info->time_to_die * 1000);
-	if (p->info->gang_len > 1)
-		sem_post(p->info->is_done);
-	return (pthread_join(p->test_death, NULL),
-		free(d->philo), exit(EXIT_FAILURE), (void *)0);
+	if (p->info->gang_len == 1)
+		return (pthread_join(p->test_death, NULL), free_all(d, 1), (void *)0);
+	return (usleep(p->info->gang_len * 5000), sem_post(p->info->is_done),
+		sem_wait(p->info->is_done), sem_post(p->info->is_done),
+		pthread_join(p->test_death, NULL), usleep(p->info->gang_len * 4000), free_all(d, 1), (void *)0);
 }

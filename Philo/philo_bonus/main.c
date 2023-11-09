@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 11:06:13 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/11/08 17:56:21 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/11/09 16:15:07 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,17 +73,12 @@ void	*init_all(t_data *d, char **argv, int i)
 	d->info.time_to_die = ft_atoll(argv[2]);
 	d->info.time_to_eat = ft_atoll(argv[3]);
 	d->info.time_to_sleep = ft_atoll(argv[4]);
-	init_sem(d);
 	d->philo = ft_calloc(d->info.gang_len, sizeof(t_philo));
+	init_sem(d);
 	while (++i < d->info.gang_len)
 	{
 		d->philo[i].info = &d->info;
 		d->philo[i].id = i;
-	}
-	if (d->info.gang_len > 1)
-	{
-		pthread_create(&d->info.all_done, NULL, &all_done, d);
-		pthread_detach(d->info.all_done);
 	}
 	return (d->info.start_time = get_time(), (void *)0);
 }
@@ -93,6 +88,17 @@ void	end(t_data *data)
 	int		i;
 	pid_t	pid;
 
+	if (data->info.gang_len > 1)
+	{
+		i = -1;
+		while (++i < data->info.gang_len)
+			sem_wait(data->info.is_done);
+		sem_post(data->info.die);
+		usleep(10000 * data->info.gang_len);
+		i = -1;
+		while (++i < data->info.gang_len)
+			sem_post(data->info.is_done);
+	}
 	i = 0;
 	while (i < data->info.gang_len)
 	{
@@ -100,8 +106,7 @@ void	end(t_data *data)
 		if (pid > 0)
 			i++;
 	}
-	usleep(1000);
-	free_all(data);
+	free_all(data, 0);
 }
 
 int	main(int argc, char **argv)

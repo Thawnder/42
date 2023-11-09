@@ -6,7 +6,7 @@
 /*   By: bpleutin <bpleutin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:33:21 by bpleutin          #+#    #+#             */
-/*   Updated: 2023/11/08 17:06:43 by bpleutin         ###   ########.fr       */
+/*   Updated: 2023/11/09 14:11:10 by bpleutin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,8 @@ void		*set_philo(t_philo *philo, t_data *d);
 void		*timer(void *ptr);
 t_alltime	get_time(void);
 void		protected_print(t_philo *philo, int state);
-void		free_all(t_data *data);
+void		free_all(t_data *data, int flag);
+void		test_sem(t_data *d, sem_t *sem, int flag);
 void		*all_done(void *ptr);
 
 #endif
