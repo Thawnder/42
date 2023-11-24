@@ -16,3 +16,6 @@
 [submodule "So_long"]
 	path = So_long
 	url = git@github.com:Thawnder/So_long.git
+[submodule "Philosophers"]
+	path = Philosophers
+	url = git@github.com:Thawnder/Philosophers.git
