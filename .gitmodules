@@ -13,3 +13,6 @@
 [submodule "Minitalk"]
 	path = Minitalk
 	url = git@github.com:Thawnder/Minitalk.git
+[submodule "So_long"]
+	path = So_long
+	url = git@github.com:Thawnder/So_long.git
