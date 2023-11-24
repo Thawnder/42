@@ -10,3 +10,6 @@
 [submodule "Minishell"]
 	path = Minishell
 	url = git@github.com:Thawnder/Minishell.git
+[submodule "Minitalk"]
+	path = Minitalk
+	url = git@github.com:Thawnder/Minitalk.git
