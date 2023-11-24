@@ -7,3 +7,6 @@
 [submodule "GetNextLine"]
 	path = GetNextLine
 	url = git@github.com:Thawnder/GetNextLine.git
+[submodule "Minishell"]
+	path = Minishell
+	url = git@github.com:Thawnder/Minishell.git
