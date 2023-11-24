@@ -19,3 +19,6 @@
 [submodule "Philosophers"]
 	path = Philosophers
 	url = git@github.com:Thawnder/Philosophers.git
+[submodule "Push_Swap"]
+	path = Push_Swap
+	url = git@github.com:Thawnder/Push_Swap.git
