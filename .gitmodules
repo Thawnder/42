@@ -4,3 +4,6 @@
 [submodule "Cub3D"]
 	path = Cub3D
 	url = git@github.com:Thawnder/Cub3D.git
+[submodule "Libft"]
+	path = Libft
+	url = git@github.com:Thawnder/Libft.git
