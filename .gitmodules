@@ -7,3 +7,6 @@
 [submodule "Libft"]
 	path = Libft
 	url = git@github.com:Thawnder/Libft.git
+[submodule "GetNextLine"]
+	path = GetNextLine
+	url = git@github.com:Thawnder/GetNextLine.git
