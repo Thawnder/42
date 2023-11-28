@@ -23,3 +23,6 @@
 [submodule "Push_Swap"]
 	path = Push_Swap
 	url = git@github.com:Thawnder/Push_Swap.git
+[submodule "CPP_Modules"]
+	path = CPP_Modules
+	url = git@github.com:Thawnder/CPP_Modules.git
