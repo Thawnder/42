@@ -26,3 +26,6 @@
 [submodule "CPP_Modules"]
 	path = CPP_Modules
 	url = git@github.com:Thawnder/CPP_Modules.git
+[submodule "IRC"]
+	path = IRC
+	url = git@github.com:LucasDeville/ft_irc.git
