@@ -29,3 +29,6 @@
 [submodule "IRC"]
 	path = IRC
 	url = git@github.com:LucasDeville/ft_irc.git
+[submodule "ft_printf"]
+	path = ft_printf
+	url = git@github.com:Thawnder/ft_printf.git
