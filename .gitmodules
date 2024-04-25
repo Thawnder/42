@@ -32,3 +32,6 @@
 [submodule "ft_printf"]
 	path = ft_printf
 	url = git@github.com:Thawnder/ft_printf.git
+[submodule "ft_transcendence"]
+	path = ft_transcendence
+	url = git@github.com:CartelGames/ft_transcendence.git
