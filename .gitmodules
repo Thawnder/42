@@ -35,3 +35,6 @@
 [submodule "ft_transcendence"]
 	path = ft_transcendence
 	url = git@github.com:CartelGames/ft_transcendence.git
+[submodule "Inception"]
+	path = Inception
+	url = git@github.com:Thawnder/Inception.git
